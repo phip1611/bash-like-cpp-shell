@@ -51,3 +51,28 @@ std::string normalize_input(char const * const input) {
 
     return str;
 }
+
+bool str_starts_with(std::string const * const haystack, std::string const * const needle) {
+    if (haystack->rfind(*needle, 0) == 0) {
+        return true;
+    }
+    return false;
+}
+
+bool str_contains_single_word_from_to(const std::string *const input, unsigned from, unsigned to) {
+    assert(from <= to);
+    assert(to <= input->length());
+    // assert(from <= input->length()); already proved because of the partial order of from, to and input length :)
+    for (unsigned i = from; i < to; i++) {
+        char c = (*input)[i];
+        if (c == ' ') {
+            // if space found
+            return false;
+        }
+    }
+    return true;
+}
+
+bool str_matches_regex(const std::string *const, const std::regex *const) {
+    return false;
+}

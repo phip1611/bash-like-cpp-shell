@@ -14,6 +14,7 @@ add_executable(phipsshell
         src/properties.cpp
         src/parse.cpp
         src/action.cpp
+        src/alias.cpp
 )
 
 # executable for strings test

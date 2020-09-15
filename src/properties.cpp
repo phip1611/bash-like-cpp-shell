@@ -38,7 +38,7 @@ std::string *ParsedInputData::getDataAliasValue() {
 std::string ParsedInputData::toString() {
     std::ostringstream stringStream;
     stringStream << "ParsedInputData {\n";
-    stringStream << "  type: " << this->type << "\n";
+    stringStream << "  type: " << input_kind_to_string(this->type) << "\n";
 
     stringStream << "  dataCdDir: ";
     if (this->dataCdDir.has_value()) {
@@ -69,7 +69,7 @@ std::string ParsedInputData::toString() {
         stringStream << "<none>\n";
     }
 
-    stringStream << "}\n";
+    stringStream << "}";
 
     return stringStream.str(); // creates a copy
 }
@@ -77,7 +77,29 @@ std::string ParsedInputData::toString() {
 std::string CommandChain::toString() {
     std::ostringstream stringStream;
     stringStream << "CommandChain {\n";
-    stringStream << "}\n";
+    stringStream << "}";
 
     return stringStream.str(); // creates a copy
+}
+
+std::string input_kind_to_string(InputKind const ik) {
+    switch (ik) {
+        case EMPTY:
+            return "EMPTY";
+        case CD:
+            return "CD";
+        case EXIT:
+            return "EXIT";
+        case COMMAND:
+            return "COMMAND";
+        case SET_ALIAS:
+            return "SET_ALIAS";
+        case GET_ALIAS:
+            return "GET_ALIAS";
+        case UN_ALIAS:
+            return "UN_ALIAS";
+        case UNKNOWN:
+        default:
+            return "UNKNOWN";
+    }
 }

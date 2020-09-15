@@ -7,7 +7,7 @@
  * Describes the kind of valid input.
  */
 enum InputKind {
-    /** Should not happen. Exit program with error in this case. */
+    /** Unknown and invalid inputs. Mostly this will be the case for invalid input. */
     UNKNOWN,
     /** Empty. Just display next row. */
     EMPTY,
@@ -24,6 +24,8 @@ enum InputKind {
     /** Deletes an alias */
     UN_ALIAS,
 };
+
+std::string input_kind_to_string(InputKind);
 
 /**
  * Data for a single command.

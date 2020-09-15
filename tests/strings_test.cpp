@@ -27,5 +27,18 @@ int main() {
         }
     }
 
+    // test str_starts_with
+    std::string haystack = "foobar";
+    std::string needle = "foo";
+    std::string needle2 = "oobar";
+    assert(str_starts_with(&haystack, &needle));
+    assert(!str_starts_with(&haystack, &needle2));
+
+    // test str_contains_single_word_from_to()
+    std::string value = "cd whatever123 afaf";
+    assert(str_contains_single_word_from_to(&value, 3, 14));
+    assert(!str_contains_single_word_from_to(&value, 3, 15));
+    assert(str_contains_single_word_from_to(&value, 15, 19)); // last index is exclusive, first inclusive
+
     return 0;
 }

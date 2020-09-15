@@ -11,6 +11,7 @@
 #include "strings.hpp"
 #include "properties.hpp"
 #include "parse.hpp"
+#include "action.hpp"
 
 int main() {
     // Interrupt from keyboard; Ctrl+C
@@ -25,20 +26,17 @@ int main() {
         ParsedInputData parsedInputData = parse(&input);
 
         // DEBUG
-        // std::cout << parsedInputData.toString() << std::endl;
+        std::cout << parsedInputData.toString() << std::endl;
 
         // all actions that don't "survive the whole loop"
-        if (parsedInputData.getType() == InputKind::UNKNOWN) {
-            readline_cleanup();
-            exit(-1);
-        }
         if (parsedInputData.getType() == InputKind::EXIT) break;
-        if (parsedInputData.getType() == InputKind::EMPTY) continue; // ask again for input
+        if (parsedInputData.getType() == InputKind::UNKNOWN ||
+                parsedInputData.getType() == InputKind::EMPTY) continue; // ask again for input
 
         if (parsedInputData.getType() == InputKind::CD) {
             action_cd(&parsedInputData);
         } else if (parsedInputData.getType() == InputKind::COMMAND) {
-            action_command(&parsedInputData, InputKind::COMMAND);
+            action_command(&parsedInputData);
         } else if (parsedInputData.getType() == InputKind::GET_ALIAS) {
             action_alias(&parsedInputData, InputKind::GET_ALIAS);
         } else if (parsedInputData.getType() == InputKind::SET_ALIAS) {
