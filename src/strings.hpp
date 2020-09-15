@@ -30,3 +30,19 @@ bool str_contains_single_word_from_to(std::string const *const, unsigned from, u
  * @return if string only contains given chars in given range
  */
 bool str_contains_only_given_chars(std::string const *const input, unsigned from, unsigned to, std::string const * const chars);
+
+/**
+ * Splits a string into sub strings by a string delimiter.
+ * @param str
+ * @param delim
+ * @return
+ */
+std::vector<std::string> str_split_str(const std::string * str, const std::string& delim);
+
+/**
+ * Splits a string into sub strings by a character delimiter.
+ * @param str
+ * @param delim
+ * @return
+ */
+std::vector<std::string> str_split_char(const std::string * str, char const delim);

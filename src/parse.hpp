@@ -39,6 +39,21 @@ bool verify_is_cd_input(std::string const * const input);
 std::string parse_cd_data(std::string const * const input);
 
 /**
+ * Parsed a complete command string with piped commands and I/O redirection.
+ * @param input
+ * @return
+ */
+CommandChain parse_command_data(std::string const * const input);
+
+/**
+ * Parses a basic command. A command consists of the actual command/executable,
+ * the args and I/O redirection.
+ * @param input
+ * @return
+ */
+Command parse_basic_command_data(std::string const * const input, CommandPosition pos);
+
+/**
  * Checks if input is a command input/action.
  * This means a single command or a chain of piped commands
  * including I/O redirection and "put in background".

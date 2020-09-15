@@ -95,3 +95,31 @@ bool str_contains_only_given_chars(const std::string *const input, unsigned int 
 
     return true;
 }
+
+std::vector<std::string> str_split_str(const std::string *s, const std::string &delim) {
+    // code from https://stackoverflow.com/a/46931770/2891595
+    size_t pos_start = 0, pos_end, delim_len = delim.length();
+    std::string token;
+    std::vector<std::string> res;
+
+    while ((pos_end = s->find (delim, pos_start)) != std::string::npos) {
+        token = s->substr (pos_start, pos_end - pos_start);
+        pos_start = pos_end + delim_len;
+        res.push_back (token);
+    }
+
+    res.push_back (s->substr (pos_start));
+    return res;
+}
+
+std::vector<std::string> str_split_char(const std::string *s, char const delim) {
+    // code from https://stackoverflow.com/a/46931770/2891595
+    std::vector<std::string> res;
+    std::stringstream ss (*s);
+    std::string item;
+
+    while (std::getline(ss, item, delim)) {
+        res.push_back (item);
+    }
+    return res;
+}

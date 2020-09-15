@@ -31,7 +31,9 @@ ParsedInputData parse(std::string const * const normalized_input) {
         // TODO get data and put it into the object
     } else if (verify_is_command_input(normalized_input)) {
         data.setType(InputKind::COMMAND);
-        // TODO get data and put it into the object
+        data.setDataCommandChain(
+                parse_command_data(normalized_input)
+        );
     } else {
         data.setType(InputKind::UNKNOWN);
     }
@@ -184,4 +186,46 @@ std::string parse_cd_data(const std::string *const input) {
         dir.push_back((*input)[i]);
     }
     return dir;
+}
+
+CommandChain parse_command_data(const std::string *const input) {
+    // first split into all basic parts (without pipe symbol)
+
+    CommandChain commandChain;
+
+    std::vector<Command> basic_commands;
+    std::vector<std::string> basic_command_strs = str_split_char(input, '|');
+    CommandPosition pos;
+
+    for (unsigned i = 0; i < basic_command_strs.size(); i++) {
+        if (i == 0) {
+            pos = BEGIN;
+        } else if (i == basic_command_strs.size() - 1) {
+            pos = END;
+        } else {
+            pos = IN_THE_MIDDLE;
+        }
+        basic_commands.push_back(
+                parse_basic_command_data(
+                        &basic_command_strs[i],
+                        pos
+                )
+        );
+    }
+
+    commandChain.setBasicCommands(basic_commands);
+    commandChain.setBackground(false); // TODO
+
+    return commandChain;
+}
+
+Command parse_basic_command_data(const std::string *const input, CommandPosition pos) {
+    Command cmd;
+    cmd.setPosition(pos);
+    std::vector<std::string> dummy_args = {"dummy", "-l", "a"};
+    // TODO
+    cmd.setArgs(dummy_args);
+    cmd.setAbsExecutablePath("TODO");
+    cmd.setCommand("TODO");
+    return cmd;
 }

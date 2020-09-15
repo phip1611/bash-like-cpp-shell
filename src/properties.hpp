@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <optional>
+#include <vector>
 
 /**
  * Describes the kind of valid input.
@@ -28,10 +29,62 @@ enum InputKind {
 std::string input_kind_to_string(InputKind);
 
 /**
+ * Position of a command inside the chain/vector of commands.
+ */
+enum CommandPosition {
+    BEGIN,
+    IN_THE_MIDDLE,
+    END,
+};
+
+std::string command_position_to_string(InputKind);
+
+/**
  * Data for a single command.
  */
 class Command {
+private:
+    /**
+     * The actual command, for example "find" or "cat".
+     */
+    std::string command = "";
+    /**
+     * Arguments for the commamd.
+     */
+    std::vector<std::string> args = {};
+    /**
+     * Absolut path to executable.
+     */
+    std::string abs_executable_path = "";
+    CommandPosition position = BEGIN;
+    std::optional<std::string> input_red_file = std::nullopt;
+    std::optional<std::string> output_red_file = std::nullopt;
+public:
+    const std::string &getCommand() const;
 
+    const std::vector<std::string> &getArgs() const;
+
+    const std::string &getAbsExecutablePath() const;
+
+    const std::optional<std::string> &getInputRedFile() const;
+
+    const std::optional<std::string> &getOutputRedFile() const;
+
+    CommandPosition getPosition() const;
+
+    void setPosition(CommandPosition position);
+
+    void setCommand(const std::string &command);
+
+    void setArgs(const std::vector<std::string> &args);
+
+    void setAbsExecutablePath(const std::string &absExecutablePath);
+
+    void setInputRedFile(const std::optional<std::string> &inputRedFile);
+
+    void setOutputRedFile(const std::optional<std::string> &outputRedFile);
+
+    std::string toString();
 };
 
 /**
@@ -40,8 +93,25 @@ class Command {
  * background.
  */
 class CommandChain {
+private:
+    /**
+     * All commands in their order they should be piped together.
+     */
+    std::vector<Command> basic_commands = {};
+    /**
+     * Put in background or not.
+     */
+    bool background = false;
 public:
     std::string toString();
+
+    const std::vector<Command> &getBasicCommands() const;
+
+    void setBasicCommands(const std::vector<Command> &basicCommands);
+
+    bool isBackground() const;
+
+    void setBackground(bool background);
 };
 
 class ParsedInputData {
@@ -57,10 +127,10 @@ public:
 
     void setType(InputKind type);
 
-    std::string * getDataCdDir();
-    CommandChain * getDataCommandChain();
-    std::string * getDataAliasName();
-    std::string * getDataAliasValue();
+    std::string &getDataCdDir();
+    CommandChain &getDataCommandChain();
+    std::string &getDataAliasName();
+    std::string &getDataAliasValue();
 
     void setDataCdDir(const std::optional<std::string> dataCdDir);
 
