@@ -9,19 +9,8 @@
 // Own includes
 #include "main.hpp"
 #include "strings.hpp"
-
-static void sig_handler(int sig) {
-    if (sig == SIGINT) {
-        // Interrupt from keyboard; Ctrl+C
-        // don't stop our shell with an error (default behaviour)
-        // TODO I don't know why this check is necessary, because SIGINT stands already in signal() function call..
-        printf("\n"); // Move to a new line
-        rl_on_new_line(); // Regenerate the prompt on a newline
-        rl_replace_line("", 0); // Clear the previous text
-        rl_redisplay();
-    }
-}
-
+#include "properties.hpp"
+#include "parse.hpp"
 
 int main() {
     // Interrupt from keyboard; Ctrl+C
@@ -33,7 +22,32 @@ int main() {
     while(true) {
         std::string input = get_input();
 
-        // Add input to history.
+        ParsedInputData parsedInputData = parse(&input);
+
+        // DEBUG
+        // std::cout << parsedInputData.toString() << std::endl;
+
+        // all actions that don't "survive the whole loop"
+        if (parsedInputData.getType() == InputKind::UNKNOWN) {
+            readline_cleanup();
+            exit(-1);
+        }
+        if (parsedInputData.getType() == InputKind::EXIT) break;
+        if (parsedInputData.getType() == InputKind::EMPTY) continue; // ask again for input
+
+        if (parsedInputData.getType() == InputKind::CD) {
+            action_cd(&parsedInputData);
+        } else if (parsedInputData.getType() == InputKind::COMMAND) {
+            action_command(&parsedInputData, InputKind::COMMAND);
+        } else if (parsedInputData.getType() == InputKind::GET_ALIAS) {
+            action_alias(&parsedInputData, InputKind::GET_ALIAS);
+        } else if (parsedInputData.getType() == InputKind::SET_ALIAS) {
+            action_alias(&parsedInputData, InputKind::SET_ALIAS);
+        } else if (parsedInputData.getType() == InputKind::UN_ALIAS) {
+            action_alias(&parsedInputData, InputKind::UN_ALIAS);
+        }
+
+        // Add input to history; only store real commands or alias; no exit or
         add_history(input.c_str());
 
         //std::cout << "Input is: '" << input_str << "'" << std::endl;
@@ -72,4 +86,16 @@ static std::string get_input() {
     std::string input_str = normalize_input(input);
     free(input);
     return input_str;
+}
+
+static void sig_handler(int sig) {
+    if (sig == SIGINT) {
+        // Interrupt from keyboard; Ctrl+C
+        // don't stop our shell with an error (default behaviour)
+        // TODO I don't know why this check is necessary, because SIGINT stands already in signal() function call..
+        printf("\n"); // Move to a new line
+        rl_on_new_line(); // Regenerate the prompt on a newline
+        rl_replace_line("", 0); // Clear the previous text
+        rl_redisplay();
+    }
 }

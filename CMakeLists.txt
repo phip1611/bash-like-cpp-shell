@@ -11,6 +11,9 @@ set(CMAKE_CXX_FLAGS     "-Wall -Werror -Wshadow -Weffc++ -pedantic ")
 add_executable(phipsshell
         src/main.cpp
         src/strings.cpp
+        src/properties.cpp
+        src/parse.cpp
+        src/action.cpp
 )
 
 # executable for strings test

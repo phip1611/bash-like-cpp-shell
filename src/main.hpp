@@ -16,3 +16,9 @@ static std::string get_input();
  * Readline cleanup.
  */
 static void readline_cleanup();
+
+/**
+ * Sighandler.
+ * @param sig Signal number
+ */
+static void sig_handler(int sig);
