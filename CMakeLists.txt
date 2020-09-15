@@ -7,9 +7,10 @@ set(LINK_LIBRARIES    "readline")
 
 set(CMAKE_CXX_FLAGS     "-Wall -Werror -Wshadow -Weffc++ -pedantic ")
 
+# main executable
 add_executable(phipsshell
         src/main.cpp
-        src/lib.cpp
+        src/strings.cpp
 )
 
 #add_executable(test
