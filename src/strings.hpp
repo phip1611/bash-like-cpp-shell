@@ -19,7 +19,14 @@ bool str_starts_with(std::string const * const, std::string const * const);
  * @param to to index (exclusive)
  * @return if the substring inside the string contains no spaces aka only a "real world".
  */
-bool str_contains_single_word_from_to(std::string const *const input, unsigned from, unsigned to);
+bool str_contains_single_word_from_to(std::string const *const, unsigned from, unsigned to);
 
-bool str_matches_regex(std::string const * const, std::regex const * const);
-
+/**
+ * Checks if string only contains given chars in given range.
+ * @param input
+ * @param from from index (inclusive)
+ * @param to to index (exclusive)
+ * @param chars
+ * @return if string only contains given chars in given range
+ */
+bool str_contains_only_given_chars(std::string const *const input, unsigned from, unsigned to, std::string const * const chars);

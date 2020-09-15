@@ -73,6 +73,25 @@ bool str_contains_single_word_from_to(const std::string *const input, unsigned f
     return true;
 }
 
-bool str_matches_regex(const std::string *const, const std::regex *const) {
-    return false;
+bool str_contains_only_given_chars(const std::string *const input, unsigned int from, unsigned int to,
+                                   const std::string *const chars) {
+    assert(from <= to);
+    assert(to <= input->length());
+
+    for (unsigned i = from; i < to; i++) {
+        bool found_current_char_in_allowed_chars = false;
+        char const c = (*input)[i];
+        for (unsigned j = 0; j < chars->length(); j++) {
+            char const allowed_char = (*chars)[j];
+            if (c == allowed_char) {
+                found_current_char_in_allowed_chars = true;
+                break;
+            }
+        }
+        if (!found_current_char_in_allowed_chars) {
+            return false;
+        }
+    }
+
+    return true;
 }

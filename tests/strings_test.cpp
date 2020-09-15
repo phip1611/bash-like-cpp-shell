@@ -1,5 +1,6 @@
 #include <cassert>
 #include <cstring>
+#include <alias.hpp>
 #include "strings.hpp"
 
 constexpr int NUM_ELEMENTS = 5;
@@ -39,6 +40,17 @@ int main() {
     assert(str_contains_single_word_from_to(&value, 3, 14));
     assert(!str_contains_single_word_from_to(&value, 3, 15));
     assert(str_contains_single_word_from_to(&value, 15, 19)); // last index is exclusive, first inclusive
+
+    // test str_contains_only_given_chars()
+    std::string teststr = "alias l=ls -la";
+    // 'l'
+    assert(str_contains_only_given_chars(&teststr, 6, 7, &GET_ALIAS_NAME_ALLOWED_CHARS));
+    // '='
+    assert(!str_contains_only_given_chars(&teststr, 7, 8, &GET_ALIAS_NAME_ALLOWED_CHARS));
+    // 'ls -la'
+    assert(!str_contains_only_given_chars(&teststr, 8, 14, &GET_ALIAS_NAME_ALLOWED_CHARS));
+    // 'ls -la'
+    assert(str_contains_only_given_chars(&teststr, 8, 14, &SET_ALIAS_VALUE_ALLOWED_CHARS));
 
     return 0;
 }
