@@ -30,6 +30,15 @@ extern std::regex COMMAND_CHAIN_VERIFY_REGEX;
 bool verify_is_cd_input(std::string const * const input);
 
 /**
+ * Interprets the input as normalized string of type "cd input" and
+ * extracts all relevant information.
+ *
+ * @param input
+ * @return
+ */
+std::string parse_cd_data(std::string const * const input);
+
+/**
  * Checks if input is a command input/action.
  * This means a single command or a chain of piped commands
  * including I/O redirection and "put in background".

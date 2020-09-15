@@ -15,7 +15,11 @@ ParsedInputData parse(std::string const * const normalized_input) {
         data.setType(InputKind::EMPTY);
     } else if (verify_is_cd_input(normalized_input)) {
         data.setType(InputKind::CD);
-        // TODO get data and put it into the object
+        data.setDataCdDir(
+                std::optional(
+                        parse_cd_data(normalized_input)
+                )
+        );
     } else if (verify_is_un_alias_input(normalized_input)) {
         data.setType(InputKind::UN_ALIAS);
         // TODO get data and put it into the object
@@ -171,4 +175,13 @@ bool verify_is_cd_input(const std::string *const input) {
         return true;
     }
     return false;
+}
+
+std::string parse_cd_data(const std::string *const input) {
+    std::string dir;
+    // "cd foobar" => "cd "^ => index 3
+    for (unsigned i = 3; i < input->length(); i++) {
+        dir.push_back((*input)[i]);
+    }
+    return dir;
 }

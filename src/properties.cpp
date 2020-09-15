@@ -42,14 +42,14 @@ std::string ParsedInputData::toString() {
 
     stringStream << "  dataCdDir: ";
     if (this->dataCdDir.has_value()) {
-        stringStream << this->dataCdDir.value();
+        stringStream << this->dataCdDir.value() << "\n";
     } else {
         stringStream << "<none>\n";
     }
 
     stringStream << "  dataCommandChain: ";
     if (this->dataCommandChain.has_value()) {
-        stringStream << this->dataCommandChain->toString();
+        stringStream << this->dataCommandChain->toString() << "\n";
     } else {
         stringStream << "<none>\n";
     }
@@ -57,14 +57,14 @@ std::string ParsedInputData::toString() {
 
     stringStream << "  dataAliasName: ";
     if (this->dataAliasName.has_value()) {
-        stringStream << this->dataAliasName.value();
+        stringStream << this->dataAliasName.value() << "\n";
     } else {
         stringStream << "<none>\n";
     }
 
     stringStream << "  dataAliasValue: ";
     if (this->dataAliasValue.has_value()) {
-        stringStream << this->dataAliasValue.value();
+        stringStream << this->dataAliasValue.value() << "\n";
     } else {
         stringStream << "<none>\n";
     }
@@ -72,6 +72,22 @@ std::string ParsedInputData::toString() {
     stringStream << "}";
 
     return stringStream.str(); // creates a copy
+}
+
+void ParsedInputData::setDataCdDir(const std::optional<std::string> dataCdDirNew) {
+    ParsedInputData::dataCdDir = dataCdDirNew;
+}
+
+void ParsedInputData::setDataCommandChain(const std::optional<CommandChain> dataCommandChainNew) {
+    ParsedInputData::dataCommandChain = dataCommandChainNew;
+}
+
+void ParsedInputData::setDataAliasName(const std::optional<std::string> dataAliasNameNew) {
+    ParsedInputData::dataAliasName = dataAliasNameNew;
+}
+
+void ParsedInputData::setDataAliasValue(const std::optional<std::string> dataAliasValueNew) {
+    ParsedInputData::dataAliasValue = dataAliasValueNew;
 }
 
 std::string CommandChain::toString() {

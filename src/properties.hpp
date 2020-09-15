@@ -62,5 +62,13 @@ public:
     std::string * getDataAliasName();
     std::string * getDataAliasValue();
 
+    void setDataCdDir(const std::optional<std::string> dataCdDir);
+
+    void setDataCommandChain(const std::optional<CommandChain> dataCommandChain);
+
+    void setDataAliasName(const std::optional<std::string> dataAliasName);
+
+    void setDataAliasValue(const std::optional<std::string> dataAliasValue);
+
     std::string toString();
 };
