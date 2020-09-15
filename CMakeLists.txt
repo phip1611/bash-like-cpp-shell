@@ -13,9 +13,14 @@ add_executable(phipsshell
         src/strings.cpp
 )
 
-#add_executable(test
-#        pipe-close-test/test.c
-#)
+# executable for strings test
+add_executable(strings_test
+        src/strings.cpp
+        tests/strings_test.cpp
+)
+target_include_directories(strings_test PRIVATE
+        src
+)
 
 # from "readline" cmakes generates "-lreadline" etc
 target_link_libraries(phipsshell ${LINK_LIBRARIES})

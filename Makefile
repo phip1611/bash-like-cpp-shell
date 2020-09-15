@@ -11,7 +11,7 @@ CPPLFLAGS = -lreadline
 phipsshell: $(OBJ)
 	g++ $(CPPFLAGS) -o $@ $+ $(CPPLFLAGS)
 
-                                      # | is a dependency; create if doesn't exist
+                               # | is a dependency; create if doesn't exist
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	g++ $(CPPFLAGS) -c -o $@ $<
 
