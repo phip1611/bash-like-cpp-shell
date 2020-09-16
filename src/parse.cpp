@@ -234,8 +234,7 @@ Command parse_basic_command_data(const std::string *const input, CommandPosition
     Command cmd;
     cmd.setPosition(pos);
 
-    // at this point input might be something like "cat < foobar.txt" or
-    // "ls -la"
+    // at this point input might be something like "cat < foobar.txt" or "ls -la"
 
     // we made sure that there are no "  " (double spaces)
     // therefore we can safely do a spring split know
@@ -244,61 +243,11 @@ Command parse_basic_command_data(const std::string *const input, CommandPosition
     // the actual command, like "ls" or "cat"
     std::string & basic_command_string_cmd = basic_command_string_parts[0];
 
-
-    // Okay this is my old legacy code from my old C shell
-    // TODO make cool C++ code
-
-    // Berechnen aus wie vielen Teilen der String besteht anhand des String Splittings an " "
-    // haben vorher bereits getrimmt und dafür gesorgt dass keine Ketten von " " vorkommen!
-    /*char * * str_parts_walker_ptr;
-    char * * cmd_str_parts = str_split(string, " "); // gibt nullterminiertes array zurück
-
-    do {
-        b_cmd->command = strdup(cmd_str_parts[0]);
-        b_cmd->executable = get_executable_path(b_cmd->command);
-        if (b_cmd->executable == NULL) {
-            fprintf(stderr, "Command '%s' not Found in PATH!\n", b_cmd->command);
-            free_basic_cmd(b_cmd);
-            b_cmd = NULL;
-            break;
-        }
-
-        // argc setzen und argv aufbauen
-        // str_parts_walker_ptr zeigt nun auf das ende der args: eventuell ist ein input redirect zu finden?
-        str_parts_walker_ptr = parse_basic_command_args(cmd_str_parts, b_cmd);
-
-
-        if (number == 0) {
-            // das erste Kommando darf einen input_redirect haben
-            int succ = parse_basic_command_redirect(INPUT_REDIRECT, b_cmd, &str_parts_walker_ptr);
-            if (succ != 0) {
-                free_basic_cmd(b_cmd);
-                b_cmd = NULL;
-                break;
-            }
-        }
-
-        if (is_last) {
-            // das letzte Kommando darf einen output_redirect haben
-            int succ = parse_basic_command_redirect(OUTPUT_REDIRECT, b_cmd, &str_parts_walker_ptr);
-            if (succ != 0) {
-                free_basic_cmd(b_cmd);
-                b_cmd = NULL;
-                break;
-            }
-        }
-    } while (NULL);
-
-
-
-    // alle cmd_str_parts wieder freigeben
-    free_str_arr(&cmd_str_parts);
-    return b_cmd;*/
-
-
-    std::vector<std::string> dummy_args = {"dummy", "-l", "a"};
-    // TODO
-    cmd.setArgs(dummy_args);
+    // could be: ['ls', '-l']
+    cmd.setArgs(
+        parse_basic_command_args(basic_command_string_parts)
+    )
+    ;
     std::optional<std::string> path = get_executable_path(&basic_command_string_cmd);
     if (!path.has_value()) {
         std::cerr << "Can't find executable path for command '" << basic_command_string_cmd << "'" << std::endl;
@@ -306,6 +255,8 @@ Command parse_basic_command_data(const std::string *const input, CommandPosition
     } else {
         cmd.setExecutablePath(path.value());
     }
+
+    // this is "ls" or "cat" for example
     cmd.setCommand(basic_command_string_cmd);
     return cmd;
 }
@@ -382,31 +333,18 @@ std::optional<std::string> get_executable_path(std::string * command) {
     return 0;
 }*/
 
-/*char ** parse_basic_command_args(char **cmd_str_parts, basic_cmd * b_cmd) {
-    // argv und argc aufbauen
-    int argc = 0;
-    char * * str_parts_walker_ptr;
-    str_parts_walker_ptr = cmd_str_parts;
-    while(*str_parts_walker_ptr != NULL  // Ende des Nullterminierten Arrays finden
-          // erstmal nur anzahl argumente zählen, um im nöchsten schritt das argv array aufbauen zu können
-          && **str_parts_walker_ptr != '<'
-          && **str_parts_walker_ptr != '>'
-          && **str_parts_walker_ptr != '&') {
-        argc++;
-        str_parts_walker_ptr++;
+std::vector<std::string> parse_basic_command_args(std::vector<std::string> & basic_command_string_parts) {
+    std::vector<std::string> args = {};
+
+    for (auto & str : basic_command_string_parts) {
+        // i/o redirect and background are no args for the program but
+        // hints for the shell
+        if (str[0] == '<' || str[0] == '>' || str[0] == '&') {
+            break;
+        } else {
+            args.push_back(str);
+        }
     }
-    b_cmd->argc = argc;
-    b_cmd->argv = calloc((size_t) argc + 1, sizeof(char *)); // + 1: Null terminated!!
-    b_cmd->argv[0] = strdup(b_cmd->command); // bei Unix ist der erste Parameter der Name wie das Programm aufgerufen wurde
-    int argc_i = 1;
-    str_parts_walker_ptr = cmd_str_parts + 1; // &cmd_str_parts[1]
-    // Alle Parameter durchwalken; Nullterminiertes Array
-    while (*str_parts_walker_ptr != NULL // Ende des Nullterminierten Arrays finden
-           && **str_parts_walker_ptr != '<'
-           && **str_parts_walker_ptr != '>'
-           && **str_parts_walker_ptr != '&') {
-        b_cmd->argv[argc_i++] = strdup(*str_parts_walker_ptr);
-        str_parts_walker_ptr++;
-    }
-    return str_parts_walker_ptr;
-}*/
+
+    return args;
+}

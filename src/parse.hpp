@@ -118,3 +118,11 @@ ParsedInputData parse(std::string const * const normalized_input);
  * @return Path to executable.
  */
 std::optional<std::string> get_executable_path(std::string * command);
+
+/**
+ * Parses the args for a command.
+ *
+ * @param basic_command_string_parts
+ * @return args vector
+ */
+std::vector<std::string> parse_basic_command_args(std::vector<std::string> & basic_command_string_parts);
