@@ -5,7 +5,9 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 DEP = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.d)
 
-CPPFLAGS  = -ggdb -MMD -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17
+# don't worry; because of debug symbols the binary get's up to 2MB larger than in my
+# previous C project; with -O2 (or O3) additional 2 MB bin size
+CPPFLAGS  = -MMD -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17 -O3
 CPPLFLAGS = -lreadline
 
 phipsshell: $(OBJ)

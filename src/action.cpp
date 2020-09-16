@@ -30,7 +30,10 @@ void action_command(ParsedInputData *data) {
         bool has_next = i + 1 != data->getDataCommandChain().size();
         if (has_next) {
             // we create pipe before it is transferred into both address spaces (via fork())
-            pipe(pipe_fd);
+            int res = pipe(pipe_fd);
+            if (res == -1) {
+                fprintf(stderr, "Error creating pipe! %s\n", strerror(errno));
+            }
         }
 
         pid = fork();
