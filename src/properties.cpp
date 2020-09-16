@@ -219,13 +219,6 @@ std::string Command::toString() {
         stringStream << "<none>\n";
     }
 
-    stringStream << "          input_red_file: ";
-    if (this->input_red_file.has_value()) {
-        stringStream << this->input_red_file.value() << "\n";
-    } else {
-        stringStream << "<none>\n";
-    }
-
     stringStream << "          output_red_file: ";
     if (this->output_red_file.has_value()) {
         stringStream << this->output_red_file.value() << "\n";

@@ -12,6 +12,11 @@
 
 #include "properties.hpp"
 
+enum IORedirectKind {
+    INPUT,
+    OUTPUT,
+};
+
 /**
  * Regex that checks if something is a valid command for a shell.
  * Note that this is HIGHLY coarse-grained and not bullet-proof!
@@ -52,6 +57,14 @@ CommandChain parse_command_data(std::string const * const input);
  * @return
  */
 Command parse_basic_command_data(std::string const * const input, CommandPosition pos);
+
+/**
+ * Helper function for parse_basic_command_data(). Enriches the command with data for
+ * either the input redirect or the output redirect.
+ * @param cmd
+ * @param basic_command_str
+ */
+void parse_basic_command_data_redirects(Command & cmd, std::string const * const basic_command_str);
 
 /**
  * Checks if input is a command input/action.

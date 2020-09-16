@@ -201,8 +201,8 @@ CommandChain parse_command_data(const std::string *const input) {
 
     std::vector<Command> basic_commands;
     std::vector<std::string> basic_command_strs = str_split_char(input, '|');
-    for (unsigned i = 0; i < basic_command_strs.size(); i++) {
-        trim(basic_command_strs[i]);
+    for (auto & basic_command_str : basic_command_strs) {
+        trim(basic_command_str);
         // we want to trim the strings because "ls | cat" splitted by '|' would otherwise
         // have spaces at the begin/end
     }
@@ -258,6 +258,8 @@ Command parse_basic_command_data(const std::string *const input, CommandPosition
 
     // this is "ls" or "cat" for example
     cmd.setCommand(basic_command_string_cmd);
+
+    parse_basic_command_data_redirects(cmd, input);
     return cmd;
 }
 
@@ -301,37 +303,27 @@ std::optional<std::string> get_executable_path(std::string * command) {
     return path;
 }
 
-/*int parse_basic_command_redirect(REDIRECT red, basic_cmd *b_cmd, char *** str_parts_walker_ptr) {
-    char c = (char) (red == INPUT_REDIRECT ? '<' : '>');
+void parse_basic_command_data_redirects(Command & cmd, const std::string * const basic_command_str) {
+    if (cmd.getPosition() == CommandPosition::IN_THE_MIDDLE) return;
 
-    // neue Variable damit das mit dem Dreifachen Pointer nicht überhand nimmt.
-    // erste dereferenzierung: das eigentliche char array (char **): zeigt konkret auf das Element des Array
-    //                         das als nächstes zu parsen ist
-    // zweite dereferenzierung: der String auf den gerade gezeigt wird
-    char ** current_str_ptr = *str_parts_walker_ptr;
+    for (unsigned i = 0; i < basic_command_str->size(); i++) {
+        char c = (*basic_command_str)[i];
+        // actually one could do some more checking here, like
+        // if cmd.pos == BEGIN and c == '<' but I wanted to decouple the
+        // verifying and parsing check.. i.e.: if something terribly wrong
+        // happens here it's the fault of a bad verifying step
 
-    if (*current_str_ptr != NULL) {
-        // es gibt beim Pointer noch etwas: Input/Output Redirect (oder invalide Eingabe)
-        if (**current_str_ptr == c) {
-            // ist ein input oder output redirect; gibt es noch das passende argument?
-            if (*(current_str_ptr + 1) != NULL) {
-                if (red == INPUT_REDIRECT) {
-                    b_cmd->input_red  = strdup(*(current_str_ptr + 1)); // nach '<' steht bspw. file.txt
-                } else {
-                    b_cmd->output_red = strdup(*(current_str_ptr + 1)); // nach '>' steht bspw. file.txt
-                }
-                *str_parts_walker_ptr += 2; // Den Pointer auf dem Array weiter schieben bis dahin wo nun geparst wurde
-                return 0;
+        if (c == '<' || c == '>') {
+            std::string file = basic_command_str->substr(i + 1);
+            trim(file);
+            if (c == '<') {
+                cmd.setInputRedFile(file);
             } else {
-                fprintf(stderr, "%s Redirect ohne Parameter!\n", red == INPUT_REDIRECT ? "Input" : "Output");
-                return -1;
+                cmd.setOutputRedFile(file);
             }
-        } else {
-            return 0; // alles ok, könnte bspw. ein '&' (Disown) sein
         }
     }
-    return 0;
-}*/
+}
 
 std::vector<std::string> parse_basic_command_args(std::vector<std::string> & basic_command_string_parts) {
     std::vector<std::string> args = {};

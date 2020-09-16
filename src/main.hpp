@@ -1,6 +1,7 @@
 #pragma once
 
 #include <iostream>
+#include "properties.hpp"
 
 /**
  * Get normalized input from readline.
@@ -22,3 +23,9 @@ static void readline_cleanup();
  * @param sig Signal number
  */
 static void sig_handler(int sig);
+
+/**
+ * Calls the action handler for the desired action.
+ * @param data
+ */
+void do_shell_action(ParsedInputData & data);

@@ -33,17 +33,7 @@ int main() {
         if (parsedInputData.getType() == InputKind::UNKNOWN ||
                 parsedInputData.getType() == InputKind::EMPTY) continue; // ask again for input
 
-        if (parsedInputData.getType() == InputKind::CD) {
-            action_cd(&parsedInputData);
-        } else if (parsedInputData.getType() == InputKind::COMMAND) {
-            action_command(&parsedInputData);
-        } else if (parsedInputData.getType() == InputKind::GET_ALIAS) {
-            action_alias(&parsedInputData, InputKind::GET_ALIAS);
-        } else if (parsedInputData.getType() == InputKind::SET_ALIAS) {
-            action_alias(&parsedInputData, InputKind::SET_ALIAS);
-        } else if (parsedInputData.getType() == InputKind::UN_ALIAS) {
-            action_alias(&parsedInputData, InputKind::UN_ALIAS);
-        }
+        do_shell_action(parsedInputData);
 
         // Add input to history; only store real commands or alias; no exit or
         add_history(input.c_str());
@@ -53,6 +43,20 @@ int main() {
 
     readline_cleanup();
 	return 0;
+}
+
+void do_shell_action(ParsedInputData & data) {
+    if (data.getType() == InputKind::CD) {
+        action_cd(&data);
+    } else if (data.getType() == InputKind::COMMAND) {
+        action_command(&data);
+    } else if (data.getType() == InputKind::GET_ALIAS) {
+        action_alias(&data, InputKind::GET_ALIAS);
+    } else if (data.getType() == InputKind::SET_ALIAS) {
+        action_alias(&data, InputKind::SET_ALIAS);
+    } else if (data.getType() == InputKind::UN_ALIAS) {
+        action_alias(&data, InputKind::UN_ALIAS);
+    }
 }
 
 static void readline_cleanup() {
