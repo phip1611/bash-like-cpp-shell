@@ -1,3 +1,8 @@
+# Copyright 2020 - Philipp Schuster.
+#
+# This file/project is licensed under a MIT license.
+# You can find the LICENSE file in the repository.
+
 SRC_DIR = src
 OBJ_DIR = build
 
