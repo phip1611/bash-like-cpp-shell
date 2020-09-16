@@ -1,5 +1,6 @@
 #include <cassert>
 #include <sstream>
+#include <memory.h>
 #include "properties.hpp"
 
 
@@ -119,6 +120,10 @@ void CommandChain::setBackground(bool backgroundNew) {
     CommandChain::background = backgroundNew;
 }
 
+size_t CommandChain::size() {
+    return this->getBasicCommands().size();
+}
+
 std::string input_kind_to_string(InputKind const ik) {
     switch (ik) {
         case EMPTY:
@@ -199,6 +204,15 @@ CommandPosition Command::getPosition() const {
 
 void Command::setPosition(CommandPosition positionNew) {
     Command::position = positionNew;
+}
+
+char ** Command::build_argv() const {
+    // +1 -> null terminated
+    char ** argv = static_cast<char **>(calloc(sizeof(char *), this->getArgs().size() + 1));
+    for (unsigned i = 0; i < this->getArgs().size(); i++) {
+        argv[i] = strdup(this->getArgs()[i].data());
+    }
+    return argv;
 }
 
 std::string Command::toString() {

@@ -26,7 +26,7 @@ int main() {
         ParsedInputData parsedInputData = parse(&input);
 
         // DEBUG
-        std::cout << parsedInputData.toString() << std::endl;
+        //std::cout << parsedInputData.toString() << std::endl;
 
         // all actions that don't "survive the whole loop"
         if (parsedInputData.getType() == InputKind::EXIT) break;

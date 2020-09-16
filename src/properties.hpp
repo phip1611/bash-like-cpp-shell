@@ -85,6 +85,13 @@ public:
     void setOutputRedFile(const std::optional<std::string> &outputRedFile);
 
     std::string toString();
+
+    /**
+     * Builds a null terminated array with all args.
+     * Allocates memory out of C++s new/delete scope.
+     * @return
+     */
+    char ** build_argv() const;
 };
 
 /**
@@ -112,6 +119,8 @@ public:
     bool isBackground() const;
 
     void setBackground(bool background);
+
+    size_t size();
 };
 
 class ParsedInputData {
