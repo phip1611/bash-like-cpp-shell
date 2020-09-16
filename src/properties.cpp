@@ -161,8 +161,8 @@ const std::vector<std::string> &Command::getArgs() const {
     return args;
 }
 
-const std::string &Command::getAbsExecutablePath() const {
-    return abs_executable_path;
+const std::string &Command::getExecutablePath() const {
+    return executable_path;
 }
 
 const std::optional<std::string> &Command::getInputRedFile() const {
@@ -181,8 +181,8 @@ void Command::setArgs(const std::vector<std::string> &argsNew) {
     Command::args = argsNew;
 }
 
-void Command::setAbsExecutablePath(const std::string &absExecutablePathNew) {
-    abs_executable_path = absExecutablePathNew;
+void Command::setExecutablePath(const std::string &executablePathNew) {
+    executable_path = executablePathNew;
 }
 
 void Command::setInputRedFile(const std::optional<std::string> &inputRedFileNew) {
@@ -205,11 +205,18 @@ std::string Command::toString() {
     std::ostringstream stringStream;
     stringStream << "Command {\n";
     stringStream << "          command: " << this->command << "\n";
-    stringStream << "          abs_executable_path: " << this->abs_executable_path << "\n";
+    stringStream << "          executable_path: " << this->executable_path << "\n";
     stringStream << "          position: " << command_position_to_string(this->position) << "\n";
     stringStream << "          args:\n";
     for (unsigned i = 0; i < this->args.size(); i++) {
         stringStream << "            [" << i << "]" << this->args[i] << "\n";
+    }
+
+    stringStream << "          input_red_file: ";
+    if (this->input_red_file.has_value()) {
+        stringStream << this->input_red_file.value() << "\n";
+    } else {
+        stringStream << "<none>\n";
     }
 
     stringStream << "          input_red_file: ";

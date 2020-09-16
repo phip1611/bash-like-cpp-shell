@@ -53,9 +53,9 @@ private:
      */
     std::vector<std::string> args = {};
     /**
-     * Absolut path to executable.
+     * Absolut or relative path to executable.
      */
-    std::string abs_executable_path = "";
+    std::string executable_path = "";
     CommandPosition position = BEGIN;
     std::optional<std::string> input_red_file = std::nullopt;
     std::optional<std::string> output_red_file = std::nullopt;
@@ -64,7 +64,7 @@ public:
 
     const std::vector<std::string> &getArgs() const;
 
-    const std::string &getAbsExecutablePath() const;
+    const std::string &getExecutablePath() const;
 
     const std::optional<std::string> &getInputRedFile() const;
 
@@ -78,7 +78,7 @@ public:
 
     void setArgs(const std::vector<std::string> &args);
 
-    void setAbsExecutablePath(const std::string &absExecutablePath);
+    void setExecutablePath(const std::string &executablePathNew);
 
     void setInputRedFile(const std::optional<std::string> &inputRedFile);
 

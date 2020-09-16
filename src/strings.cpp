@@ -123,3 +123,24 @@ std::vector<std::string> str_split_char(const std::string *s, char const delim) 
     }
     return res;
 }
+
+void trim(std::string &s) {
+    ltrim(s);
+    rtrim(s);
+}
+
+// trim from start (in place)
+// https://stackoverflow.com/a/44973498/2891595
+void ltrim(std::string &s) {
+    s.erase(s.begin(), std::find_if(s.begin(), s.end(), [](int ch) {
+        return !std::isspace(ch);
+    }));
+}
+
+// trim from end (in place)
+// https://stackoverflow.com/a/44973498/2891595
+void rtrim(std::string &s) {
+    s.erase(std::find_if(s.rbegin(), s.rend(), [](int ch) {
+        return !std::isspace(ch);
+    }).base(), s.end());
+}

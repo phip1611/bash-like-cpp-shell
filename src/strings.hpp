@@ -46,3 +46,16 @@ std::vector<std::string> str_split_str(const std::string * str, const std::strin
  * @return
  */
 std::vector<std::string> str_split_char(const std::string * str, char const delim);
+
+/**
+ * Trims a string at the begin and at the end.
+ * @param str
+ * @return
+ */
+void trim(std::string &s);
+
+// trim from start (in place)
+void ltrim(std::string &s);
+
+// trim from end (in place)
+void rtrim(std::string &s);

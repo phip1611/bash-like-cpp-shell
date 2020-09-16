@@ -47,7 +47,7 @@ CommandChain parse_command_data(std::string const * const input);
 
 /**
  * Parses a basic command. A command consists of the actual command/executable,
- * the args and I/O redirection.
+ * the args and I/O redirection. The input string must be trimmed and normalized!
  * @param input
  * @return
  */
@@ -108,3 +108,13 @@ bool verify_is_un_alias_input(std::string const * const input);
  * @return
  */
 ParsedInputData parse(std::string const * const normalized_input);
+
+/**
+ * Finds the path of the executable that shall be executed. This is either directly provided
+ * (e.g. "./my_bin" or "/usr/bin/cat") or searched in $PATH. If no binary can found an
+ * empty optional is returned.
+ *
+ * @param command
+ * @return Path to executable.
+ */
+std::optional<std::string> get_executable_path(std::string * command);
