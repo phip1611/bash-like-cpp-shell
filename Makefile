@@ -7,15 +7,28 @@ DEP = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.d)
 
 # don't worry; because of debug symbols the binary get's up to 2MB larger than in my
 # previous C project; with -O2 (or O3) additional 2 MB bin size
-CPPFLAGS  = -MMD -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17 -O3
+CPPFLAGS  = -ggdb -MMD -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17 -O2
 CPPLFLAGS = -lreadline
 
+# Mac OS specific
+# only use the libreadline header files in this repository
+# if on MacOS/Darwin. Otherwise use the ones that have been
+# installed via package manager in linux distribution (most recent ones)
+# the reason for this is: `brew install readline` doesn't 
+# install header files
+UNAME_S := $(shell uname -s)
+ifeq ($(UNAME_S),Darwin)
+	INC_DIRS=-I./include
+	LINK_DIRS=-L/usr/local/opt/readline/lib/ # location where brew installs readline
+endif
+# End: Mac OS specific
+
 phipsshell: $(OBJ)
-	g++ $(CPPFLAGS) -o $@ $+ $(CPPLFLAGS)
+	g++ $(LINK_DIRS) $(CPPFLAGS) -o $@ $+ $(CPPLFLAGS)
 
                                # | is a dependency; create if doesn't exist
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	g++ $(CPPFLAGS) -c -o $@ $<
+	g++ $(INC_DIRS) $(CPPFLAGS) -c -o $@ $<
 
 # if OBJ_DIR doesn't exist: create
 $(OBJ_DIR):

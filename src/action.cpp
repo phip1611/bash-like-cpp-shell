@@ -1,6 +1,6 @@
 #include <zconf.h>
 #include <cstring>
-#include <wait.h>
+#include <sys/wait.h>
 #include "action.hpp"
 
 void action_cd(ParsedInputData *data) {

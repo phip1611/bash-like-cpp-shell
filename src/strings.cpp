@@ -1,3 +1,4 @@
+#include <sstream>
 #include <cassert>
 #include <cstring>
 #include "strings.hpp"

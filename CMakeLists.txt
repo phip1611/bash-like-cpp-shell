@@ -16,6 +16,9 @@ add_executable(phipsshell
         src/action.cpp
         src/alias.cpp
 )
+target_include_directories(phipsshell PRIVATE
+        /usr/local/opt/readline/lib/
+)
 
 # executable for strings test
 add_executable(strings_test
@@ -28,3 +31,12 @@ target_include_directories(strings_test PRIVATE
 
 # from "readline" cmakes generates "-lreadline" etc
 target_link_libraries(phipsshell ${LINK_LIBRARIES})
+
+if (${CMAKE_SYSTEM_NAME} MATCHES "Darwin")
+    target_include_directories(phipsshell PRIVATE
+            include
+    )
+    target_link_directories(phipsshell PRIVATE
+            /usr/local/opt/readline/lib/
+    )
+endif()

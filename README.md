@@ -40,11 +40,12 @@ Valid inputs are (subset of bash):
 - `cat in.txt | grep -i foo | wc -l > out.file`
 
 ## How to use/build phipsshell?
-It definitely works on Linux distributions like Ubuntu but it should run on every UNIX system
-including Mac. The problem on Mac is to get the header files of libreadline installed automatically.
-I was to lazy to do this manually, therefore I don't know if it really works there but I'm really 
-sure, because Mac OS is a UNIX system.
+Runs on UNIX systems, like Linux distributions or Mac OS.
+#### Linux (Debian, Ubuntu)
 - `$ sudo apt install libreadline-dev`
+- `$ make && ./phipsshell`
+#### Mac OS
+- `$ brew install readline` (installs only the runtime library, not the header files; therefore the header files are in ./include)
 - `$ make && ./phipsshell`
 
 ## Why Makefile and CMakeLists.txt?
@@ -54,3 +55,7 @@ think it's 'nice' and I don't want to loose it.
 
 ## Dependencies
 *phipsshell* uses [libreadline](https://tiswww.case.edu/php/chet/readline/rltop.html).
+Readline is distributed under a [GPL v3 License](https://www.gnu.org/licenses/gpl-3.0.html).
+This repository contains a few header files (copied from the original source) in order to
+support compiling on MacOS. That is because `brew install readline` doesn't install header
+files.

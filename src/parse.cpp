@@ -1,4 +1,5 @@
 #include <cstring>
+#include <sstream>
 #include <dirent.h>
 #include "parse.hpp"
 #include "strings.hpp"
