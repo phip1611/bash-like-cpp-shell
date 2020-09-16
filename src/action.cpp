@@ -1,6 +1,13 @@
+/*
+ * Copyright 2020 - Philipp Schuster.
+ *
+ * This file/project is licensed under a MIT license.
+ * You can find the LICENSE file in the repository.
+ */
+
 #include <zconf.h>
 #include <cstring>
-#include <wait.h>
+#include <sys/wait.h>
 #include "action.hpp"
 
 void action_cd(ParsedInputData *data) {

@@ -1,3 +1,11 @@
+/*
+ * Copyright 2020 - Philipp Schuster.
+ *
+ * This file/project is licensed under a MIT license.
+ * You can find the LICENSE file in the repository.
+ */
+
+#include <sstream>
 #include <cassert>
 #include <cstring>
 #include "strings.hpp"
