@@ -19,11 +19,6 @@
 
 #include "properties.hpp"
 
-enum IORedirectKind {
-    INPUT,
-    OUTPUT,
-};
-
 /**
  * Regex that checks if something is a valid command for a shell.
  * Note that this is HIGHLY coarse-grained and not bullet-proof!

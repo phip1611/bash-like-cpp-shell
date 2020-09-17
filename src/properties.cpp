@@ -131,17 +131,6 @@ size_t CommandChain::size() {
     return this->getBasicCommands().size();
 }
 
-std::string command_position_to_string(CommandPosition const cp) {
-    switch (cp) {
-        case BEGIN:
-            return "BEGIN";
-        case END:
-            return "END";
-        case IN_THE_MIDDLE:
-        default:
-            return "IN_THE_MIDDLE";
-    }
-}
 
 const std::string &Command::getCommand() const {
     return command;
@@ -205,7 +194,7 @@ std::string Command::toString() {
     stringStream << "Command {\n";
     stringStream << "          command: " << this->command << "\n";
     stringStream << "          executable_path: " << this->executable_path << "\n";
-    stringStream << "          position: " << command_position_to_string(this->position) << "\n";
+    stringStream << "          position: " << command_position::to_string(this->position) << "\n";
     stringStream << "          args:\n";
     for (unsigned i = 0; i < this->args.size(); i++) {
         stringStream << "            [" << i << "]" << this->args[i] << "\n";

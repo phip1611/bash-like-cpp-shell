@@ -11,17 +11,7 @@
 #include <optional>
 #include <vector>
 #include "input-kind.enum.hpp"
-
-/**
- * Position of a command inside the chain/vector of commands.
- */
-enum CommandPosition {
-    BEGIN,
-    IN_THE_MIDDLE,
-    END,
-};
-
-std::string command_position_to_string(InputKind);
+#include "command-position.enum.hpp"
 
 /**
  * Data for a single command.

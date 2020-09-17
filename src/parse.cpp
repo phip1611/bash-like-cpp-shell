@@ -218,11 +218,11 @@ CommandChain parse_command_data(const std::string *const input) {
 
     for (unsigned i = 0; i < basic_command_strs.size(); i++) {
         if (i == 0) {
-            pos = BEGIN;
+            pos = CommandPosition::BEGIN;
         } else if (i == basic_command_strs.size() - 1) {
-            pos = END;
+            pos = CommandPosition::END;
         } else {
-            pos = IN_THE_MIDDLE;
+            pos = CommandPosition::IN_THE_MIDDLE;
         }
         basic_commands.push_back(
                 parse_basic_command_data(
