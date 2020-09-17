@@ -113,9 +113,11 @@ void action_command(ParsedInputData *data) {
     // TODO also add async wait
     if (!data->getDataCommandChain().isBackground()) {
         for (unsigned i = 0; i < data->getDataCommandChain().size(); i++) {
-            waitpid(pids[i], &pid_states[i], 0);
+            int res = waitpid(pids[i], &pid_states[i], 0);
             // actually we do not need to output the pid_states here; just return
-            return;
+            if (res == -1) {
+                fprintf(stderr, "Error waiting for child by pid! %s\n", strerror(errno));
+            }
         }
     }
 }
