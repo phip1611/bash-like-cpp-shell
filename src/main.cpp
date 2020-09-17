@@ -16,7 +16,7 @@
 // Own includes
 #include "main.hpp"
 #include "strings.hpp"
-#include "properties.hpp"
+#include "parsed-input-data.class.hpp"
 #include "parse.hpp"
 #include "action.hpp"
 

@@ -7,8 +7,7 @@
 
 #include <cassert>
 #include <sstream>
-#include <memory.h>
-#include "properties.hpp"
+#include "parsed-input-data.class.hpp"
 
 
 InputKind ParsedInputData::getType() const {
@@ -97,38 +96,3 @@ void ParsedInputData::setDataAliasName(const std::optional<std::string> dataAlia
 void ParsedInputData::setDataAliasValue(const std::optional<std::string> dataAliasValueNew) {
     ParsedInputData::dataAliasValue = dataAliasValueNew;
 }
-
-std::string CommandChain::toString() {
-    std::ostringstream stringStream;
-    stringStream << "CommandChain {\n";
-    stringStream << "      background: " << this->background << "\n";
-    stringStream << "      basic_commands:\n";
-    for (unsigned i = 0; i < this->basic_commands.size(); i++) {
-        stringStream << "        [" << i << "]" << this->basic_commands[i].toString() << "\n";
-    }
-    stringStream << "    }";
-
-    return stringStream.str(); // creates a copy
-}
-
-const std::vector<Command> &CommandChain::getBasicCommands() const {
-    return basic_commands;
-}
-
-void CommandChain::setBasicCommands(const std::vector<Command> &basicCommands) {
-    basic_commands = basicCommands;
-}
-
-bool CommandChain::isBackground() const {
-    return background;
-}
-
-void CommandChain::setBackground(bool backgroundNew) {
-    CommandChain::background = backgroundNew;
-}
-
-size_t CommandChain::size() {
-    return this->getBasicCommands().size();
-}
-
-

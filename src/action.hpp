@@ -9,7 +9,7 @@
 
 // concrete actions, like changing the pwd, executing a command or modify aliases
 
-#include "properties.hpp"
+#include "parsed-input-data.class.hpp"
 
 const unsigned PIPE_READ = 0;
 const unsigned PIPE_WRITE = 1;

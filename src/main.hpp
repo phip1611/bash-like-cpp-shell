@@ -8,7 +8,7 @@
 #pragma once
 
 #include <iostream>
-#include "properties.hpp"
+#include "parsed-input-data.class.hpp"
 
 /**
  * Get normalized input from readline.

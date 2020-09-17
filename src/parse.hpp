@@ -17,7 +17,7 @@
 #include <iostream>
 #include <regex>
 
-#include "properties.hpp"
+#include "parsed-input-data.class.hpp"
 
 /**
  * Regex that checks if something is a valid command for a shell.
