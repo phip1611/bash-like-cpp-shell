@@ -19,7 +19,8 @@ really solid, tho.
 ## Functionality
 This shell focuses on **proper user input**! Validation is only very coarse-grained and 
 definitely not bullet-proof! The focus here is on understanding pipes and not in writing
-a good parser.
+a good parser. **Only single spaces** are allowed and **no quote marks!**
+`echo "foo  bar"` won't work.
 
 Valid inputs are (subset of bash):
 #### simple commands
@@ -59,3 +60,7 @@ Readline is distributed under a [GPL v3 License](https://www.gnu.org/licenses/gp
 This repository contains a few header files (copied from the original source) in order to
 support compiling on MacOS. That is because `brew install readline` doesn't install header
 files.
+
+## Important Keywords for used UNIX facilities
+- pipes, file descriptors, waitpid, WNOHANG, dup2
+
