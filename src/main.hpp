@@ -5,10 +5,14 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Main / phipsshell
+
 #pragma once
 
 #include <iostream>
-#include "properties.hpp"
+
+#include "parsed-input-data.class.hpp"
+#include "bg-process-state.class.hpp"
 
 /**
  * Get normalized input from readline.
@@ -35,4 +39,9 @@ static void sig_handler(int sig);
  * Calls the action handler for the desired action.
  * @param data
  */
-void do_shell_action(ParsedInputData & data);
+static void do_shell_action(ParsedInputData & data);
+
+/**
+ * Checks the state of background processes.
+ */
+void check_bg_processes();

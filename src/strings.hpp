@@ -5,19 +5,25 @@
  * You can find the LICENSE file in the repository.
  */
 
+// String utility functions
+
 #pragma once
 
 #include <iostream>
 #include <regex>
 
 /**
- * Reads a c-string and creates an C++ string. Removes all spaces at the begin
+ * Reads a c-string and creates a C++ string. Removes all spaces at the begin
  * and the end, and replaces all double (or more) spaces with single spaces.
  *
  * @return normalized string or ""
  */
 std::string normalize_input(char const * const);
 
+/**
+ * Checks if a string starts with the other string.
+ * @return if a string starts with the other string
+ */
 bool str_starts_with(std::string const * const, std::string const * const);
 
 /**

@@ -5,6 +5,8 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Main / phipsshell
+
 // C++ Includes
 #include <iostream>
 #include <csignal> // c signal.h
@@ -16,9 +18,10 @@
 // Own includes
 #include "main.hpp"
 #include "strings.hpp"
-#include "properties.hpp"
+#include "parsed-input-data.class.hpp"
 #include "parse.hpp"
 #include "action.hpp"
+#include "bg-processes.hpp"
 
 int main() {
     // Interrupt from keyboard; Ctrl+C
@@ -28,6 +31,11 @@ int main() {
     rl_bind_key('\t', rl_complete); // auto completes paths (from current pwd)
 
     while(true) {
+        // we check for finished background processes after each iteration
+        // bach handles it in the same/similar way
+        check_bg_processes();
+
+        // get user input (user sees prompt here)
         std::string input = get_input();
 
         ParsedInputData parsedInputData = parse(&input);
@@ -106,5 +114,23 @@ static void sig_handler(int sig) {
         rl_on_new_line(); // Regenerate the prompt on a newline
         rl_replace_line("", 0); // Clear the previous text
         rl_redisplay();
+    }
+}
+
+void check_bg_processes() {
+    for (auto & p : bg_processes) {
+
+        // TODO
+        // remove old entries; otherwise we use infinite memory over time
+        if (p->isDone()) continue;
+
+        // waitpid WNOHANG does the magic here :)
+        int status_code[1];
+        pid_t res = waitpid(p->getPid(), status_code, WNOHANG);
+        // returns the pid on sucess
+        if (res != 0) {
+            printf("-- BG-Process with PID %d finished with Status Code %d\n", p->getPid(), status_code[0]);
+            p->set_done();
+        }
     }
 }

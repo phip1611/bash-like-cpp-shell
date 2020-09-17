@@ -13,13 +13,12 @@ set(LINK_LIBRARIES    "readline")
 set(CMAKE_CXX_FLAGS   "-Wall -Werror -Wshadow -Weffc++ -pedantic ")
 
 # main executable
-add_executable(phipsshell
-        src/main.cpp
-        src/strings.cpp
-        src/properties.cpp
-        src/parse.cpp
-        src/action.cpp
+file(GLOB phipsshell_SRC
+        "src/*.hpp"
+        "src/*.cpp"
 )
+add_executable(phipsshell ${phipsshell_SRC})
+
 target_include_directories(phipsshell PRIVATE
         /usr/local/opt/readline/lib/
 )

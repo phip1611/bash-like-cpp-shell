@@ -14,18 +14,15 @@
  * parsing.
  */
 
+// All functions related to verifying and parsing the input.
+
 #include <iostream>
 #include <regex>
 
-#include "properties.hpp"
-
-enum IORedirectKind {
-    INPUT,
-    OUTPUT,
-};
+#include "parsed-input-data.class.hpp"
 
 /**
- * Regex that checks if something is a valid command for a shell.
+ * Regex that checks if something is a valid command chain for a shell.
  * Note that this is HIGHLY coarse-grained and not bullet-proof!
  */
 extern std::regex COMMAND_CHAIN_VERIFY_REGEX;
@@ -41,46 +38,14 @@ extern std::regex COMMAND_CHAIN_VERIFY_REGEX;
  */
 bool verify_is_cd_input(std::string const * const input);
 
-/**
- * Interprets the input as normalized string of type "cd input" and
- * extracts all relevant information.
- *
- * @param input
- * @return
- */
-std::string parse_cd_data(std::string const * const input);
-
-/**
- * Parsed a complete command string with piped commands and I/O redirection.
- * @param input
- * @return
- */
-CommandChain parse_command_data(std::string const * const input);
-
-/**
- * Parses a basic command. A command consists of the actual command/executable,
- * the args and I/O redirection. The input string must be trimmed and normalized!
- * @param input
- * @return
- */
-Command parse_basic_command_data(std::string const * const input, CommandPosition pos);
-
-/**
- * Helper function for parse_basic_command_data(). Enriches the command with data for
- * either the input redirect or the output redirect.
- * @param cmd
- * @param basic_command_str
- */
-void parse_basic_command_data_redirects(Command & cmd, std::string const * const basic_command_str);
 
 /**
  * Checks if input is a command input/action.
  * This means a single command or a chain of piped commands
  * including I/O redirection and "put in background".
- * This function only provides
- * a BASIC level of input verifying and is DEFINITELY not bullet-proof.
- * The main reason is to make sure the most fatal errors during actual
- * parsing won't happen.
+ * This function only provides a BASIC level of input verifying and
+ * is DEFINITELY not bullet-proof. The main reason is to make sure
+ * the most fatal errors during actual parsing won't happen
  *
  * @param input normalized input string
  * @return input is a command input/action
@@ -130,6 +95,48 @@ bool verify_is_un_alias_input(std::string const * const input);
 ParsedInputData parse(std::string const * const normalized_input);
 
 /**
+ * Interprets the input as normalized string of type "cd input" and
+ * extracts all relevant information.
+ *
+ * @param input
+ * @return
+ */
+std::string parse_cd_data(std::string const * const input);
+
+/**
+ * Parsed a complete command chain string with piped commands and I/O redirection.
+ * @param input
+ * @return
+ */
+CommandChain parse_command_chain(std::string const * const input);
+
+/**
+ * Parses a basic command. A command consists of the actual command/executable,
+ * the args and I/O redirection. The input string must be trimmed and normalized!
+ * @param input
+ * @return
+ */
+Command parse_command_chain_command(std::string const * const input, CommandPosition pos);
+
+/**
+ * Helper function for parse_command_chain_command(). Enriches the command with data for
+ * either the input redirect or the output redirect.
+ * This changes/modifies the command object.
+ * @param cmd
+ * @param basic_command_str
+ */
+void parse_command_chain_command_io_redirection(Command & cmd, std::string const * const basic_command_str);
+
+/**
+ * Parses the args for a command.
+ * This doesn't change the command object.
+ *
+ * @param basic_command_string_parts
+ * @return args vector
+ */
+std::vector<std::string> parse_command_chain_command_args(std::vector<std::string> & basic_command_string_parts);
+
+/**
  * Finds the path of the executable that shall be executed. This is either directly provided
  * (e.g. "./my_bin" or "/usr/bin/cat") or searched in $PATH. If no binary can found an
  * empty optional is returned.
@@ -138,11 +145,3 @@ ParsedInputData parse(std::string const * const normalized_input);
  * @return Path to executable.
  */
 std::optional<std::string> get_executable_path(std::string * command);
-
-/**
- * Parses the args for a command.
- *
- * @param basic_command_string_parts
- * @return args vector
- */
-std::vector<std::string> parse_basic_command_args(std::vector<std::string> & basic_command_string_parts);

@@ -5,11 +5,21 @@
  * You can find the LICENSE file in the repository.
  */
 
+// functions that handles the actual action that the user wants to do
+// (after parsing is done)
+
 #include <zconf.h>
 #include <cstring>
 #include <sys/wait.h>
-#include "action.hpp"
 
+#include "action.hpp"
+#include "bg-processes.hpp"
+
+/**
+ * Performs a 'cd' action.
+ *
+ * @param data parsed input data
+ */
 void action_cd(ParsedInputData *data) {
     int res = chdir(data->getDataCdDir().c_str());
     if (res == -1) {
@@ -18,6 +28,13 @@ void action_cd(ParsedInputData *data) {
     }
 }
 
+/**
+ * Performs a command chain action. This means
+ * one or multiple (piped) commands including
+ * I/O redirection, passing arguments, etc.
+ *
+ * @param data parsed input data
+ */
 void action_command(ParsedInputData *data) {
     std::vector<int> pids;
     std::vector<int> pid_states(data->getDataCommandChain().size());
@@ -97,13 +114,27 @@ void action_command(ParsedInputData *data) {
     // TODO also add async wait
     if (!data->getDataCommandChain().isBackground()) {
         for (unsigned i = 0; i < data->getDataCommandChain().size(); i++) {
-            waitpid(pids[i], &pid_states[i], 0);
+            int res = waitpid(pids[i], &pid_states[i], 0);
             // actually we do not need to output the pid_states here; just return
-            return;
+            if (res == -1) {
+                fprintf(stderr, "Error waiting for child by pid! %s\n", strerror(errno));
+            }
+        }
+    } else {
+        // add all pids as bg processes
+        for (unsigned i = 0; i < data->getDataCommandChain().size(); i++) {
+            bg_processes.push_back(
+                new BgProcessState(pids[i])
+            );
         }
     }
 }
 
+/**
+ * Performs an alias action, like storing a new alias.
+ *
+ * @param data parsed input data
+ */
 void action_alias(ParsedInputData *data, InputKind aliasKind) {
     // TODO
 }

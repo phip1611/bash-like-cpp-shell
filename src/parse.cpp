@@ -5,15 +5,17 @@
  * You can find the LICENSE file in the repository.
  */
 
+// All functions related to verifying and parsing the input.
+
 #include <cstring>
 #include <sstream>
 #include <dirent.h>
+
 #include "parse.hpp"
 #include "strings.hpp"
 #include "alias.hpp"
 
 std::regex COMMAND_CHAIN_VERIFY_REGEX("([A-z0-9ÄÖÜäöü/]+\\s?\\<?\\s?\\>?[A-z0-9-ÄÖÜäöü\\./]*\\s?\\>?\\s?\\|?\\s?\\>?)+(\\&)?");
-
 
 ParsedInputData parse(std::string const * const normalized_input) {
     ParsedInputData data;
@@ -41,7 +43,7 @@ ParsedInputData parse(std::string const * const normalized_input) {
         } else if (verify_is_command_input(normalized_input)) {
             data.setType(InputKind::COMMAND);
             data.setDataCommandChain(
-                    parse_command_data(normalized_input)
+                    parse_command_chain(normalized_input)
             );
         } else {
             data.setType(InputKind::UNKNOWN);
@@ -202,7 +204,7 @@ std::string parse_cd_data(const std::string *const input) {
     return dir;
 }
 
-CommandChain parse_command_data(const std::string *const input) {
+CommandChain parse_command_chain(const std::string *const input) {
     // first split into all basic parts (without pipe symbol)
 
     CommandChain commandChain;
@@ -218,14 +220,14 @@ CommandChain parse_command_data(const std::string *const input) {
 
     for (unsigned i = 0; i < basic_command_strs.size(); i++) {
         if (i == 0) {
-            pos = BEGIN;
+            pos = CommandPosition::BEGIN;
         } else if (i == basic_command_strs.size() - 1) {
-            pos = END;
+            pos = CommandPosition::END;
         } else {
-            pos = IN_THE_MIDDLE;
+            pos = CommandPosition::IN_THE_MIDDLE;
         }
         basic_commands.push_back(
-                parse_basic_command_data(
+                parse_command_chain_command(
                         &basic_command_strs[i],
                         pos
                 )
@@ -233,12 +235,16 @@ CommandChain parse_command_data(const std::string *const input) {
     }
 
     commandChain.setBasicCommands(basic_commands);
-    commandChain.setBackground(false); // TODO
+
+    // check background
+    // because our string is normalized (trimmed) it's easy
+    // either the last character is '&' or not
+    commandChain.setBackground(input->back() == '&');
 
     return commandChain;
 }
 
-Command parse_basic_command_data(const std::string *const input, CommandPosition pos) {
+Command parse_command_chain_command(const std::string *const input, CommandPosition pos) {
     Command cmd;
     cmd.setPosition(pos);
 
@@ -253,7 +259,7 @@ Command parse_basic_command_data(const std::string *const input, CommandPosition
 
     // could be: ['ls', '-l']
     cmd.setArgs(
-        parse_basic_command_args(basic_command_string_parts)
+            parse_command_chain_command_args(basic_command_string_parts)
     )
     ;
     std::optional<std::string> path = get_executable_path(&basic_command_string_cmd);
@@ -267,7 +273,7 @@ Command parse_basic_command_data(const std::string *const input, CommandPosition
     // this is "ls" or "cat" for example
     cmd.setCommand(basic_command_string_cmd);
 
-    parse_basic_command_data_redirects(cmd, input);
+    parse_command_chain_command_io_redirection(cmd, input);
     return cmd;
 }
 
@@ -311,7 +317,7 @@ std::optional<std::string> get_executable_path(std::string * command) {
     return path;
 }
 
-void parse_basic_command_data_redirects(Command & cmd, const std::string * const basic_command_str) {
+void parse_command_chain_command_io_redirection(Command & cmd, const std::string * const basic_command_str) {
     if (cmd.getPosition() == CommandPosition::IN_THE_MIDDLE) return;
 
     for (unsigned i = 0; i < basic_command_str->size(); i++) {
@@ -333,7 +339,7 @@ void parse_basic_command_data_redirects(Command & cmd, const std::string * const
     }
 }
 
-std::vector<std::string> parse_basic_command_args(std::vector<std::string> & basic_command_string_parts) {
+std::vector<std::string> parse_command_chain_command_args(std::vector<std::string> & basic_command_string_parts) {
     std::vector<std::string> args = {};
 
     for (auto & str : basic_command_string_parts) {
