@@ -12,6 +12,7 @@
 #include <iostream>
 
 #include "parsed-input-data.class.hpp"
+#include "bg-process-state.class.hpp"
 
 /**
  * Get normalized input from readline.
@@ -39,3 +40,8 @@ static void sig_handler(int sig);
  * @param data
  */
 static void do_shell_action(ParsedInputData & data);
+
+/**
+ * Checks the state of background processes.
+ */
+void check_bg_processes();

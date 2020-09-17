@@ -235,7 +235,11 @@ CommandChain parse_command_chain(const std::string *const input) {
     }
 
     commandChain.setBasicCommands(basic_commands);
-    commandChain.setBackground(false); // TODO
+
+    // check background
+    // because our string is normalized (trimmed) it's easy
+    // either the last character is '&' or not
+    commandChain.setBackground(input->back() == '&');
 
     return commandChain;
 }

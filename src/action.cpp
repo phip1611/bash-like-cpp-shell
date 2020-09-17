@@ -13,6 +13,7 @@
 #include <sys/wait.h>
 
 #include "action.hpp"
+#include "bg-processes.hpp"
 
 /**
  * Performs a 'cd' action.
@@ -118,6 +119,13 @@ void action_command(ParsedInputData *data) {
             if (res == -1) {
                 fprintf(stderr, "Error waiting for child by pid! %s\n", strerror(errno));
             }
+        }
+    } else {
+        // add all pids as bg processes
+        for (unsigned i = 0; i < data->getDataCommandChain().size(); i++) {
+            bg_processes.push_back(
+                new BgProcessState(pids[i])
+            );
         }
     }
 }
