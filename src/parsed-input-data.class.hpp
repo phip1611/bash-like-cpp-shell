@@ -5,21 +5,48 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Parsed Input Data class.
+
 #pragma once
 
 #include <iostream>
 #include <optional>
 #include <vector>
+
 #include "input-kind.enum.hpp"
 #include "command-position.enum.hpp"
 #include "command-chain.class.hpp"
 
+/**
+ * Describes the parsed data for all possible input values.
+ * <li> 'setalias foo=bar'
+ * <li> 'ps aux'
+ * <li> 'ls -la | grep -i uni'
+ * <li> 'cat < in.txt | grep -i uni > /dev/null'
+ * <li> 'cat < in.txt | grep -i uni > /dev/null &'
+ * are all parsed into an object of this class.
+ */
 class ParsedInputData {
 private:
+    /**
+     * The type of the input.
+     */
     InputKind type = InputKind::UNKNOWN;
+    /**
+     * If present, the data for the 'cd' action.
+     */
     std::optional<std::string> dataCdDir = std::nullopt;
+    /**
+     * If present, the data for the 'execute command chain' action.
+     */
     std::optional<CommandChain> dataCommandChain = std::nullopt;
+    /**
+     * If present, the data for the 'alias (get-, un-)' action.
+     */
     std::optional<std::string> dataAliasName = std::nullopt;
+    /**
+    * If present, the data for the 'alias (set-)' action.
+    */
     std::optional<std::string> dataAliasValue = std::nullopt;
 
 public:

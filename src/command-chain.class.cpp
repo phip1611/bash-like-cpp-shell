@@ -5,8 +5,11 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Command Chain class.
+
 #include <string>
 #include <sstream>
+
 #include "command-chain.class.hpp"
 
 std::string CommandChain::toString() {

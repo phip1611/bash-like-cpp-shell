@@ -5,12 +5,13 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Command class.
+
 #include <sstream>
-#include <string>
 #include <optional>
+
 #include "command.class.hpp"
 #include "command-position.enum.hpp"
-
 
 const std::string &Command::getCommand() const {
     return command;

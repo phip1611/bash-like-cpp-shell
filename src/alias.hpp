@@ -5,6 +5,8 @@
  * You can find the LICENSE file in the repository.
  */
 
+// All functions related to aliases. Store, Get, Delete..
+
 #pragma once
 
 #include <string>

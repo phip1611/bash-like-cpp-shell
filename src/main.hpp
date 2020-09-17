@@ -5,9 +5,12 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Main / phipsshell
+
 #pragma once
 
 #include <iostream>
+
 #include "parsed-input-data.class.hpp"
 
 /**
@@ -35,4 +38,4 @@ static void sig_handler(int sig);
  * Calls the action handler for the desired action.
  * @param data
  */
-void do_shell_action(ParsedInputData & data);
+static void do_shell_action(ParsedInputData & data);

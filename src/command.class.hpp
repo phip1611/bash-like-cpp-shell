@@ -5,12 +5,20 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Command class.
+
 #include <vector>
 #include <string>
+
 #include "command-position.enum.hpp"
 
 /**
- * Data for a single command.
+ * Data for a single command. A command means a executable with
+ * it's args and possible I/O redirection. Examples are:
+ * <li> 'cat foo.txt'
+ * <li> 'cat &gt; foo.txt'
+ * <li> 'cat foo.txt &lt; out.txt'
+ * <li> 'ls -la'
  */
 class Command {
 private:
@@ -26,8 +34,17 @@ private:
      * Absolut or relative path to executable.
      */
     std::string executable_path = "";
+    /**
+     * The position inside the chain.
+     */
     CommandPosition position = BEGIN;
+    /**
+     * If present, the name of the input redirect file.
+     */
     std::optional<std::string> input_red_file = std::nullopt;
+    /**
+     * If present, the name of the output redirect file.
+     */
     std::optional<std::string> output_red_file = std::nullopt;
 public:
     const std::string &getCommand() const;

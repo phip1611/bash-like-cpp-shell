@@ -5,6 +5,8 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Command Position enum.
+
 #include "command-position.enum.hpp"
 
 std::string command_position::to_string(CommandPosition const cp) {

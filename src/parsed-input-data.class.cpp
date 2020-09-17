@@ -5,10 +5,12 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Parsed Input Data class.
+
 #include <cassert>
 #include <sstream>
-#include "parsed-input-data.class.hpp"
 
+#include "parsed-input-data.class.hpp"
 
 InputKind ParsedInputData::getType() const {
     return type;

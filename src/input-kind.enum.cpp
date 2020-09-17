@@ -5,6 +5,8 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Input Kind enum.
+
 #include "input-kind.enum.hpp"
 
 std::string input_kind::to_string(InputKind const ik) {

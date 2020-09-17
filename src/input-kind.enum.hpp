@@ -5,12 +5,14 @@
  * You can find the LICENSE file in the repository.
  */
 
+// Input Kind enum.
+
 #pragma once
 
 #include <string>
 
 /**
- * Describes the kind of valid input.
+ * Describes the kinds of input.
  */
 enum InputKind {
     /** Unknown and invalid inputs. Mostly this will be the case for invalid input. */
@@ -32,5 +34,11 @@ enum InputKind {
 };
 
 namespace input_kind {
+    /**
+     * Transforms a enum value into it's string representation.
+     *
+     * @param ik
+     * @return string representation
+     */
     std::string to_string(InputKind const ik);
 }

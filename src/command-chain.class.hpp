@@ -14,10 +14,15 @@
 #include "command-position.enum.hpp"
 #include "command.class.hpp"
 
+// Command Chain class.
+
 /**
  * Data for a command chain. This means a chain of commands where one programs
  * output is the next programs input (pipe). A command chain can also be put into
- * background.
+ * background. Valid examples for a command chain:
+ * <li> 'cat foo.txt'
+ * <li> 'cat foo.txt | grep -i hello'
+ * <li> 'cat &lt; foo.txt | grep -i hello > /dev/null'
  */
 class CommandChain {
 private:

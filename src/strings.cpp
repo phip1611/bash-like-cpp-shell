@@ -5,9 +5,12 @@
  * You can find the LICENSE file in the repository.
  */
 
+// String utility functions
+
 #include <sstream>
 #include <cassert>
 #include <cstring>
+
 #include "strings.hpp"
 
 std::string normalize_input(char const * const input) {
