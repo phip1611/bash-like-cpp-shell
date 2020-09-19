@@ -65,7 +65,6 @@ void action_command(ParsedInputData *data) {
             fprintf(stderr, "failure during fork!\n");
             exit(errno);
         }
-        pids.push_back(pid);
 
         // child: this code is responsible for connecting it's stdin and stdout with the proper fd's from
         // the pipes;
@@ -100,6 +99,8 @@ void action_command(ParsedInputData *data) {
         }
         // parent
         else {
+            pids.push_back(pid);
+
             // Close the reading end of the pipe that was created in the previous iteration step
             // this is really important, otherwise the whole application (chain) could stuck when
             // the internal 64KB buffer (Linux) is full, e.g. when 'cat < in_65kb.txt | grep -i hi'
