@@ -10,8 +10,6 @@
 #include <vector>
 #include <string>
 
-#include "command-position.enum.hpp"
-
 /**
  * Data for a single command. A command means a executable with
  * it's args and possible I/O redirection. Examples are:
@@ -32,9 +30,13 @@ private:
      */
     std::vector<std::string> args = {};
     /**
-     * The position inside the chain.
+     * If the command is the first in the chain.
      */
-    CommandPosition position = BEGIN;
+    bool is_begin = false;
+    /**
+     * If the command is the last in the chain.
+     */
+    bool is_end = false;
     /**
      * If present, the name of the input redirect file.
      */
@@ -52,10 +54,6 @@ public:
 
     const std::optional<std::string> &getOutputRedFile() const;
 
-    CommandPosition getPosition() const;
-
-    void setPosition(CommandPosition position);
-
     void setExecutable(const std::string &executable);
 
     void setArgs(const std::vector<std::string> &args);
@@ -64,7 +62,29 @@ public:
 
     void setOutputRedFile(const std::optional<std::string> &outputRedFile);
 
-    std::string toString();
+    void setIsBegin(bool isBegin);
+
+    void setIsEnd(bool isEnd);
+
+    std::string toString() const;
+
+    /**
+     * If this->position == CommandPositionFlags::Begin
+     * @return this->position == CommandPositionFlags::Begin
+     */
+    bool is_first() const;
+
+    /**
+     * If this->position == CommandPositionFlags::End
+     * @return this->position == CommandPositionFlags::End
+     */
+    bool is_last() const;
+
+    /**
+     * If this->position == CommandPositionFlags::IN_THE_MIDDLE
+     * @return this->position == CommandPositionFlags::IN_THE_MIDDLE
+     */
+    bool is_in_middle() const;
 
     /**
      * Builds a null terminated array with all args.

@@ -12,9 +12,6 @@
 
 #include "parsed-input-data.class.hpp"
 
-const unsigned PIPE_READ = 0;
-const unsigned PIPE_WRITE = 1;
-
 /**
  * Performs a 'cd' action.
  *

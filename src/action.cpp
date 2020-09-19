@@ -14,6 +14,7 @@
 
 #include "action.hpp"
 #include "bg-processes.hpp"
+#include "pipe.class.hpp"
 
 /**
  * Performs a 'cd' action.
@@ -38,55 +39,110 @@ void action_cd(ParsedInputData *data) {
 void action_command(ParsedInputData *data) {
     std::vector<int> pids;
     std::vector<int> pid_states(data->getDataCommandChain().size());
-    int pipe_fd[2]; // the pipe fds that are created per iteration
     pid_t pid;
-    std::optional<int> fd_in = std::nullopt;
 
-    // if we have an I/O redirect on the first file: open the file and get the file descriptor!
-    if (data->getDataCommandChain().getBasicCommands()[0].getInputRedFile().has_value()) {
-        FILE *ir = fopen(data->getDataCommandChain().getBasicCommands()[0].getInputRedFile()->c_str(), "r");
-        fd_in.emplace(fileno(ir));
-        // TODO close ir?
-    }
+    // Each pipe connects two processes. Each process uses
+    // it's pipe EITHER as READ or as WRITE end.
+    // _______________    _______________    _________
+    // | cat foo.txt |    | grep -i abc |    | wc -l |
+    // ---------------    ---------------    ---------
+    //             ^        ^         ^        ^
+    //       WRITE |--------|  R / W  |--------| READ
+    //       END               E   E             END
+
+
+    // Pipe that connects the previous forked process with
+    // the current process. The first process in the chain has
+    // no value here.
+    std::optional<Pipe> pipe_to_current = std::nullopt;
+    // Pipe that connects the current process with
+    // the process that is created next after fork.
+    // The last process in the chain has no value here.
+    std::optional<Pipe> pipe_to_next = std::nullopt;
 
     for (unsigned i = 0; i < data->getDataCommandChain().size(); i++) {
         Command const &curr_cmd = data->getDataCommandChain().getBasicCommands()[i];
-        bool has_next = i + 1 != data->getDataCommandChain().size();
-        if (has_next) {
-            // we create pipe before it is transferred into both address spaces (via fork())
-            int res = pipe(pipe_fd);
-            if (res == -1) {
-                fprintf(stderr, "Error creating pipe! %s\n", strerror(errno));
+
+        // now prepare Pipe-Objects
+        {
+            // pipe_to_next to pipe_to_current object
+            if (pipe_to_next.has_value()) {
+                // for the record: currently this means that
+                // a new copy of the pipe in pipe_to_next
+                // is created and stored inside pipe_to_current
+
+                // I assume that compiler optimization will
+                // remove this overhead
+
+                pipe_to_current.emplace(
+                    pipe_to_next.value()
+                );
+                pipe_to_next.reset();
+           }
+
+            // Create new pipe for pipe_to_next
+            // if (curr_cmd.is_in_middle()) {
+            if (!curr_cmd.is_last()) {
+                pipe_to_next.emplace(Pipe());
+            } else {
+                pipe_to_next.reset();
             }
         }
 
         pid = fork();
         if (pid < 0) {
-            fprintf(stderr, "failure during fork!\n");
+            std::cerr << "Failed to fork(): '" << strerror(errno) << "'" << std::endl;
             exit(errno);
+        }
+
+        // parent
+        if (pid > 0) {
+            // save pid
+            pids.push_back(pid);
+
+            // Because the parent just creates pipes, forks itself
+            // and the actual programs are executed (exec()) inside the child,
+            // the parent must close all pipe ends that are yet in other processes
+
+            // this is really important, otherwise the whole application (chain) could stuck when
+            // the internal 64KB buffer (Linux) is full, e.g. when 'cat < in_65kb.txt | grep -i hi'
+            // this is, because Linux thinks that a reader (the parent) exists but it never reads
+            // from the buffer -> deadlock
+
+            // Parent process closes all it's open FDs to the pipe
+            if (pipe_to_current.has_value()) {
+                pipe_to_current->close_all();
+            }
         }
 
         // child: this code is responsible for connecting it's stdin and stdout with the proper fd's from
         // the pipes;
-        if (pid == 0) {
-            // the child process never uses the read end of the just created pipe; it is for the next child
-            if (has_next) close(pipe_fd[PIPE_READ]);
+        else {
+            // Everything here is now done in a separately address space (because we forked)
 
-            // If we have no value here then it's the first command in the chain. It just reads from stdin.
-            // If we have a value here in the first command then because it's an input redirect ('cat < file.txt')
-            // If we have a value here in a non-first command then this means:
-            // we want to connect the output from the previous process with stdin of the current one
-            if (fd_in.has_value()) dup2(fd_in.value(), STDIN_FILENO);
+            // handle '<' and '>'
+            // handle '<' and '>'
+            {
+                // handle '<'
+                if (curr_cmd.is_first() && curr_cmd.getInputRedFile().has_value()) {
+                    FILE *ir = fopen(curr_cmd.getInputRedFile()->c_str(), "r");
+                    dup2(fileno(ir), STDIN_FILENO);
+                }
+                // handle '>'
+                if (curr_cmd.is_last() && curr_cmd.getOutputRedFile().has_value()) {
+                    FILE *of = fopen(curr_cmd.getOutputRedFile()->c_str(), "w");
+                    dup2(fileno(of), STDOUT_FILENO);
+                }
+            }
 
-            // Output redirection
-            if (has_next) {
-                // We connect stdout of this process with the write end of the pipe
-                dup2(pipe_fd[PIPE_WRITE], STDOUT_FILENO);
-            } else if (curr_cmd.getOutputRedFile().has_value()) {
-                // else we connect stdout with the descriptor of the file
-                FILE *of = fopen(curr_cmd.getOutputRedFile().value().c_str(), "w");
-                dup2(fileno(of), STDOUT_FILENO);
-                // TODO close of?
+            // closes Pipe ends that we don't need
+            if (pipe_to_current.has_value()) {
+                // process reads from this pipe
+                pipe_to_current->as_read_end();
+            }
+            if (pipe_to_next.has_value()) {
+                // process writes to this pipe
+                pipe_to_next->as_write_end();
             }
 
             // does automatic resolution of the given executable
@@ -97,26 +153,10 @@ void action_command(ParsedInputData *data) {
             fprintf(stderr, "Exec '%s' failed!\n", curr_cmd.getExecutable().c_str());
             exit(errno);
         }
-        // parent
-        else {
-            pids.push_back(pid);
-
-            // Close the reading end of the pipe that was created in the previous iteration step
-            // this is really important, otherwise the whole application (chain) could stuck when
-            // the internal 64KB buffer (Linux) is full, e.g. when 'cat < in_65kb.txt | grep -i hi'
-            if (fd_in.has_value()) close(fd_in.value());
-
-            // if a pipe has just been created
-            if (has_next) {
-                close(pipe_fd[PIPE_WRITE]);
-                // we set the reading end of the just created pipe to fd_in in order for the
-                // next child process, that stdin can be connected with this pipe end
-                fd_in.emplace(pipe_fd[PIPE_READ]);
-            }
-        }
     }
 
-    // TODO also add async wait
+    // Wait for all child pids
+
     if (!data->getDataCommandChain().isBackground()) {
         for (unsigned i = 0; i < data->getDataCommandChain().size(); i++) {
             int res = waitpid(pids[i], &pid_states[i], 0);

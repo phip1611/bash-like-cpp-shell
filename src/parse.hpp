@@ -108,9 +108,11 @@ CommandChain parse_command_chain(std::string const * const input);
  * Parses a basic command. A command consists of the actual command/executable,
  * the args and I/O redirection. The input string must be trimmed and normalized!
  * @param input
+ * @param i index of element (Starting at 0)
+ * @param n total number of elements
  * @return
  */
-Command parse_command_chain_command(std::string const * const input, CommandPosition pos);
+Command parse_command_chain_command(std::string const * const input, unsigned i, unsigned n);
 
 /**
  * Helper function for parse_command_chain_command(). Enriches the command with data for

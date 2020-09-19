@@ -218,20 +218,13 @@ CommandChain parse_command_chain(const std::string *const input) {
         // we want to trim the strings because "ls | cat" splitted by '|' would otherwise
         // have spaces at the begin/end
     }
-    CommandPosition pos;
 
     for (unsigned i = 0; i < basic_command_strs.size(); i++) {
-        if (i == 0) {
-            pos = CommandPosition::BEGIN;
-        } else if (i == basic_command_strs.size() - 1) {
-            pos = CommandPosition::END;
-        } else {
-            pos = CommandPosition::IN_THE_MIDDLE;
-        }
         basic_commands.push_back(
                 parse_command_chain_command(
                         &basic_command_strs[i],
-                        pos
+                        i,
+                        basic_command_strs.size()
                 )
         );
     }
@@ -246,9 +239,11 @@ CommandChain parse_command_chain(const std::string *const input) {
     return commandChain;
 }
 
-Command parse_command_chain_command(const std::string *const input, CommandPosition pos) {
+Command parse_command_chain_command(const std::string *const input, unsigned i, unsigned n) {
     Command cmd;
-    cmd.setPosition(pos);
+
+    cmd.setIsBegin(i == 0);
+    cmd.setIsEnd(i + 1 == n);
 
     // at this point input might be something like "cat < foobar.txt" or "ls -la"
 
@@ -277,7 +272,10 @@ Command parse_command_chain_command(const std::string *const input, CommandPosit
 }
 
 void parse_command_chain_command_io_redirection(Command & cmd, const std::string * const basic_command_str) {
-    if (cmd.getPosition() == CommandPosition::IN_THE_MIDDLE) return;
+    // only supported if:
+    // input file && is first
+    // output file && is last
+    if (cmd.is_in_middle()) return;
 
     for (unsigned i = 0; i < basic_command_str->size(); i++) {
         char c = (*basic_command_str)[i];

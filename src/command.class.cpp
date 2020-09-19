@@ -11,7 +11,6 @@
 #include <optional>
 
 #include "command.class.hpp"
-#include "command-position.enum.hpp"
 
 const std::string &Command::getExecutable() const {
     return executable;
@@ -45,14 +44,6 @@ void Command::setOutputRedFile(const std::optional<std::string> &outputRedFileNe
     output_red_file = outputRedFileNew;
 }
 
-CommandPosition Command::getPosition() const {
-    return position;
-}
-
-void Command::setPosition(CommandPosition positionNew) {
-    Command::position = positionNew;
-}
-
 char ** Command::build_argv() const {
     // +1 -> null terminated
     char ** argv = static_cast<char **>(calloc(sizeof(char *), this->getArgs().size() + 1));
@@ -62,11 +53,34 @@ char ** Command::build_argv() const {
     return argv;
 }
 
-std::string Command::toString() {
+
+bool Command::is_in_middle() const {
+    return !this->is_begin && !this->is_end;
+}
+
+bool Command::is_last() const {
+    return this->is_end;
+}
+
+bool Command::is_first() const {
+    return this->is_begin;
+}
+
+void Command::setIsBegin(bool isBeginNew) {
+    is_begin = isBeginNew;
+}
+
+void Command::setIsEnd(bool isEndNew) {
+    is_end = isEndNew;
+}
+
+std::string Command::toString() const {
     std::ostringstream stringStream;
     stringStream << "Command {\n";
     stringStream << "          executable: " << this->executable << "\n";
-    stringStream << "          position: " << command_position::to_string(this->position) << "\n";
+    stringStream << "          is_begin: " << this->is_begin << "\n";
+    stringStream << "          is_in_middle: " << this->is_in_middle() << "\n";
+    stringStream << "          is_end: " << this->is_end << "\n";
     stringStream << "          args:\n";
 
     for (unsigned i = 0; i < this->args.size(); i++) {

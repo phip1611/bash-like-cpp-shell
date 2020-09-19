@@ -14,7 +14,6 @@
 #include <vector>
 
 #include "input-kind.enum.hpp"
-#include "command-position.enum.hpp"
 #include "command-chain.class.hpp"
 
 /**

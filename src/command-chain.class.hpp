@@ -10,8 +10,8 @@
 #include <iostream>
 #include <optional>
 #include <vector>
+
 #include "input-kind.enum.hpp"
-#include "command-position.enum.hpp"
 #include "command.class.hpp"
 
 // Command Chain class.

@@ -5,30 +5,23 @@
  * You can find the LICENSE file in the repository.
  */
 
-// Command Position enum.
+// Pipe end enum.
 
 #pragma once
 
 #include <string>
 
-#include "input-kind.enum.hpp"
-
-/**
- * Position of a command inside the chain/vector of commands.
- */
-enum CommandPosition {
-    BEGIN,
-    IN_THE_MIDDLE,
-    END,
+enum PipeEnd {
+    READ = 0,
+    WRITE = 1,
 };
 
-namespace command_position {
+namespace pipe_end {
     /**
      * Transforms a enum value into it's string representation.
      *
      * @param cp
      * @return string representation
      */
-    std::string to_string(CommandPosition const cp);
+    std::string to_string(PipeEnd const pe);
 }
-
