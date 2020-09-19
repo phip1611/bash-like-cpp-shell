@@ -9,6 +9,7 @@
 
 #include <cstring>
 #include <sstream>
+#include <unistd.h>
 #include <dirent.h>
 
 #include "parse.hpp"
@@ -261,61 +262,18 @@ Command parse_command_chain_command(const std::string *const input, CommandPosit
     // could be: ['ls', '-l']
     cmd.setArgs(
             parse_command_chain_command_args(basic_command_string_parts)
-    )
-    ;
-    std::optional<std::string> path = get_executable_path(&basic_command_string_cmd);
-    if (!path.has_value()) {
+    );
+
+    // this is "ls", "cat", "./mybin" or "/usr/bin/bash" for example
+    if (check_executable_path_exists(&basic_command_string_cmd)) {
+        cmd.setExecutable(basic_command_string_cmd);
+    } else {
         std::cerr << "Can't find executable path for command '" << basic_command_string_cmd << "'" << std::endl;
         throw std::exception();
-    } else {
-        cmd.setExecutablePath(path.value());
     }
-
-    // this is "ls" or "cat" for example
-    cmd.setCommand(basic_command_string_cmd);
 
     parse_command_chain_command_io_redirection(cmd, input);
     return cmd;
-}
-
-std::optional<std::string> get_executable_path(std::string * command) {
-    std::optional<std::string> path = std::nullopt;
-
-    std::string local_path_prefix = "./";
-    std::string parent_path_prefix = "../";
-
-    // relative path or absolute path
-    if ((*command)[0] == '/' || str_starts_with(command, &local_path_prefix) || str_starts_with(command, &parent_path_prefix)) {
-        std::string cpy = *command;  // creates a copy
-        path.emplace(cpy);
-        return path;
-    }
-
-    // otherwise search in path
-    std::string path_var = getenv("PATH"); // calls the string constructor which creates a copy
-    std::vector<std::string> path_var_parts = str_split_char(&path_var, ':');
-
-    for (auto & part : path_var_parts) {
-        DIR * d = opendir(part.c_str());
-        struct dirent * direntry;
-        while ((direntry = readdir(d)) != nullptr) {
-            // skip '.' and '..'
-            if ((direntry->d_name[0] == '.' && &direntry->d_name[1] == nullptr)
-                    || (direntry->d_name[0] == '.' && direntry->d_name[1] == '.' && &direntry->d_name[2] == nullptr)) {
-                continue;
-            }
-
-            if (strcmp(direntry->d_name, command->c_str()) == 0) {
-                std::ostringstream stringStream;
-                stringStream << part << '/' << *command;
-                path.emplace(stringStream.str()); // creates a copy
-                break;
-            }
-        }
-        closedir(d);
-    }
-
-    return path;
 }
 
 void parse_command_chain_command_io_redirection(Command & cmd, const std::string * const basic_command_str) {
@@ -355,3 +313,38 @@ std::vector<std::string> parse_command_chain_command_args(std::vector<std::strin
 
     return args;
 }
+
+bool check_executable_path_exists(std::string * command) {
+    std::string local_path_prefix = "./";
+    std::string parent_path_prefix = "../";
+
+    // relative path or absolute path
+    if ((*command)[0] == '/' || str_starts_with(command, &local_path_prefix) || str_starts_with(command, &parent_path_prefix)) {
+        return access(command->c_str(), F_OK | X_OK) != -1;
+    }
+
+    // otherwise search in path
+    std::string path_var = getenv("PATH"); // calls the string constructor which creates a copy
+    std::vector<std::string> path_var_parts = str_split_char(&path_var, ':');
+
+    for (auto & part : path_var_parts) {
+        DIR * d = opendir(part.c_str());
+        struct dirent * direntry;
+        while ((direntry = readdir(d)) != nullptr) {
+            // skip '.' and '..'
+            if ((direntry->d_name[0] == '.' && &direntry->d_name[1] == nullptr)
+                || (direntry->d_name[0] == '.' && direntry->d_name[1] == '.' && &direntry->d_name[2] == nullptr)) {
+                continue;
+            }
+
+            // exists
+            if (strcmp(direntry->d_name, command->c_str()) == 0) {
+                return true;
+            }
+        }
+        closedir(d);
+    }
+
+    return false;
+}
+

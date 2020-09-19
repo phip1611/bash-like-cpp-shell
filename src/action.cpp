@@ -90,8 +90,12 @@ void action_command(ParsedInputData *data) {
                 // TODO close of?
             }
 
-            execv(curr_cmd.getExecutablePath().c_str(), curr_cmd.build_argv());
-            fprintf(stderr, "Exec '%s' failed!\n", curr_cmd.getExecutablePath().c_str());
+            // does automatic resolution of the given executable
+            // e.g. "cat", "ls" are searched in the path whereas
+            // "./foobar" or "/bin/bash" are executed directly
+            // this works because the process knows its own working dir
+            execvp(curr_cmd.getExecutable().c_str(), curr_cmd.build_argv());
+            fprintf(stderr, "Exec '%s' failed!\n", curr_cmd.getExecutable().c_str());
             exit(errno);
         }
         // parent

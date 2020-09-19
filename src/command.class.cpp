@@ -13,16 +13,12 @@
 #include "command.class.hpp"
 #include "command-position.enum.hpp"
 
-const std::string &Command::getCommand() const {
-    return command;
+const std::string &Command::getExecutable() const {
+    return executable;
 }
 
 const std::vector<std::string> &Command::getArgs() const {
     return args;
-}
-
-const std::string &Command::getExecutablePath() const {
-    return executable_path;
 }
 
 const std::optional<std::string> &Command::getInputRedFile() const {
@@ -33,16 +29,12 @@ const std::optional<std::string> &Command::getOutputRedFile() const {
     return output_red_file;
 }
 
-void Command::setCommand(const std::string &commandNew) {
-    Command::command = commandNew;
+void Command::setExecutable(const std::string &executableNew) {
+    Command::executable = executableNew;
 }
 
 void Command::setArgs(const std::vector<std::string> &argsNew) {
     Command::args = argsNew;
-}
-
-void Command::setExecutablePath(const std::string &executablePathNew) {
-    executable_path = executablePathNew;
 }
 
 void Command::setInputRedFile(const std::optional<std::string> &inputRedFileNew) {
@@ -73,8 +65,7 @@ char ** Command::build_argv() const {
 std::string Command::toString() {
     std::ostringstream stringStream;
     stringStream << "Command {\n";
-    stringStream << "          command: " << this->command << "\n";
-    stringStream << "          executable_path: " << this->executable_path << "\n";
+    stringStream << "          executable: " << this->executable << "\n";
     stringStream << "          position: " << command_position::to_string(this->position) << "\n";
     stringStream << "          args:\n";
 

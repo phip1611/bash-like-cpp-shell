@@ -23,17 +23,14 @@
 class Command {
 private:
     /**
-     * The actual command, for example "find" or "cat".
+     * The part of the user input that describes the executable.
+     * Could be "cat", "ls", "./mybinary" or "/usr/bin/bash".
      */
-    std::string command = "";
+    std::string executable = "";
     /**
      * Arguments for the commamd.
      */
     std::vector<std::string> args = {};
-    /**
-     * Absolut or relative path to executable.
-     */
-    std::string executable_path = "";
     /**
      * The position inside the chain.
      */
@@ -47,11 +44,9 @@ private:
      */
     std::optional<std::string> output_red_file = std::nullopt;
 public:
-    const std::string &getCommand() const;
+    const std::string &getExecutable() const;
 
     const std::vector<std::string> &getArgs() const;
-
-    const std::string &getExecutablePath() const;
 
     const std::optional<std::string> &getInputRedFile() const;
 
@@ -61,11 +56,9 @@ public:
 
     void setPosition(CommandPosition position);
 
-    void setCommand(const std::string &command);
+    void setExecutable(const std::string &executable);
 
     void setArgs(const std::vector<std::string> &args);
-
-    void setExecutablePath(const std::string &executablePathNew);
 
     void setInputRedFile(const std::optional<std::string> &inputRedFile);
 

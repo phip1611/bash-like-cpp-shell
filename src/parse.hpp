@@ -10,7 +10,7 @@
 /*
  * These functions provide a BASIC set of input verifying.
  * They are not bullet-proof! The only reason for them is to
- * make sure the most fatal errors won't happen during command
+ * make sure the most fatal errors won't happen during executable
  * parsing.
  */
 
@@ -131,11 +131,10 @@ void parse_command_chain_command_io_redirection(Command & cmd, std::string const
 std::vector<std::string> parse_command_chain_command_args(std::vector<std::string> & basic_command_string_parts);
 
 /**
- * Finds the path of the executable that shall be executed. This is either directly provided
- * (e.g. "./my_bin" or "/usr/bin/cat") or searched in $PATH. If no binary can found an
- * empty optional is returned.
+ * Checks if the specified executable exists and is executable either in $PATH or in the file system.
+ * (e.g. "./my_bin" or "/usr/bin/cat") or searched in $PATH.
  *
  * @param command
- * @return Path to executable.
+ * @return file exists and is executable
  */
-std::optional<std::string> get_executable_path(std::string * command);
+bool check_executable_path_exists(std::string * command);
