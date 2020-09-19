@@ -15,8 +15,6 @@
 #include "strings.hpp"
 #include "alias.hpp"
 
-std::regex COMMAND_CHAIN_VERIFY_REGEX("([A-z0-9ÄÖÜäöü/]+\\s?\\<?\\s?\\>?[A-z0-9-ÄÖÜäöü\\./]*\\s?\\>?\\s?\\|?\\s?\\>?)+(\\&)?");
-
 ParsedInputData parse(std::string const * const normalized_input) {
     ParsedInputData data;
     try {
@@ -177,7 +175,10 @@ bool verify_is_get_alias_input(const std::string *const input) {
 }
 
 bool verify_is_command_input(const std::string *const input) {
-    return input->length() > 0 && regex_match(*input, COMMAND_CHAIN_VERIFY_REGEX);
+    // Because I'm not a regex expert, std::regex is limited, and I don't
+    // want to use "boost" as another dependency, I just don't do really
+    // verifying at all. Focus here is on valid user input anyway. :)
+    return input->length() > 0;
 }
 
 bool verify_is_cd_input(const std::string *const input) {

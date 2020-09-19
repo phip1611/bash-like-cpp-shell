@@ -41,6 +41,9 @@ int main() {
         ParsedInputData parsedInputData = parse(&input);
 
         // DEBUG
+        if (parsedInputData.getType() == InputKind::UNKNOWN) {
+            std::cerr << "Unknown/illegal command!" << std::endl;
+        }
         //std::cout << parsedInputData.toString() << std::endl;
 
         // all actions that don't "survive the whole loop"

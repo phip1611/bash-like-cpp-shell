@@ -155,3 +155,26 @@ void rtrim(std::string &s) {
         return !std::isspace(ch);
     }).base(), s.end());
 }
+
+// currently unused but perhaps useful in future if better validation code comes
+// or a good regex that actually works properly
+bool str_regex_is_full_match(const std::string &str, const std::regex &regex) {
+    std::smatch m;
+    bool found;
+    try {
+        found = std::regex_match(str, m, regex);
+    } catch (std::exception &e) {
+        // could result in "The complexity of an attempted match against a
+        // regular expression exceeded a pre-set level"
+        // this is because std::regex "is bad" and lib boost should be used
+        //std::cerr << e.what() << std::endl;
+    }
+
+    /*std::cout << "found?: " << found << std::endl;
+    if (found) {
+        std::cout << "length of string: " << haystack.length() << std::endl;
+        std::cout << "length of match: " << m.length() << std::endl;
+    }*/
+
+    return found && str.length() == m.length();
+}

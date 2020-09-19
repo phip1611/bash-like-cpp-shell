@@ -52,5 +52,11 @@ int main() {
     // 'ls -la'
     assert(str_contains_only_given_chars(&teststr, 8, 14, &SET_ALIAS_VALUE_ALLOWED_CHARS));
 
+    // test str_regex_is_full_match()
+    std::string haystack2 = "../foobar/../foobar < in.txt | ../foobar/../foobar > out.txt &";
+    assert(str_regex_is_full_match(haystack2, std::regex("(((\\/?\\.{0,2}\\/?)+[A-z0-9ÄÖÜäöü])+\\s?(\\<|\\>\\s?)?\\|?\\s?)+\\&?")));
+    assert(str_regex_is_full_match("foobar", std::regex("foobar")));
+    assert(!str_regex_is_full_match("foobarfoobar", std::regex("foobar")));
+
     return 0;
 }

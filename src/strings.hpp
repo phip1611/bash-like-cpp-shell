@@ -61,6 +61,16 @@ std::vector<std::string> str_split_str(const std::string * str, const std::strin
 std::vector<std::string> str_split_char(const std::string * str, char const delim);
 
 /**
+ * Tests whether a regex is a "full match", i.e. the length of the match
+ * equals the string length.
+ *
+ * @param str
+ * @param regex
+ * @return
+ */
+bool str_regex_is_full_match(std::string const & str, std::regex const & regex);
+
+/**
  * Trims a string at the begin and at the end.
  * @param str
  * @return

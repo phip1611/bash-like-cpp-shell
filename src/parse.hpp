@@ -22,12 +22,6 @@
 #include "parsed-input-data.class.hpp"
 
 /**
- * Regex that checks if something is a valid command chain for a shell.
- * Note that this is HIGHLY coarse-grained and not bullet-proof!
- */
-extern std::regex COMMAND_CHAIN_VERIFY_REGEX;
-
-/**
  * Checks if input is a cd input/action. This function only provides
  * a BASIC level of input verifying and is DEFINITELY not bullet-proof.
  * The main reason is to make sure the most fatal errors during actual
