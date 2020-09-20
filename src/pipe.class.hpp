@@ -18,10 +18,26 @@
  * that one process marks it's part of the Pipe as READ
  * while the other process marks it's part of the Pipe
  * as WRITE.
+ *
+ * Each Pipe object will exists per address space, because
+ * we create a child process for each command to be executed.
+ *
+ * Each pipe connects two processes. Each process has
+ * access to "pipe_to_current" and "pipe_to_next".
+ * First one is used as READ-end while the latter one
+ * is used as WRITE-end.
+ */
+/* _______________    _______________    _________
+ * | cat foo.txt |    | grep -i abc |    | wc -l |
+ * ---------------    ---------------    ---------
+ *             ^        ^         ^        ^
+ *       WRITE |--------|  R / W  |--------| READ
+ *       END               E   E             END
+ *                    (current child)
+ *         -Pipe to Current-   -Pipe to Next-
  */
 class Pipe {
 private:
-    // for debug reasons
     int fds[2] = {0, 0};
     /**
      * The main purpose of the lock is to make sure that

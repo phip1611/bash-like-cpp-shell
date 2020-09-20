@@ -41,14 +41,19 @@ void action_command(ParsedInputData *data) {
     std::vector<int> pid_states(data->getDataCommandChain().size());
     pid_t pid;
 
-    // Each pipe connects two processes. Each process uses
-    // it's pipe EITHER as READ or as WRITE end.
+    // Each pipe connects two processes. Each process has
+    // access to "pipe_to_current" and "pipe_to_next".
+    // First one is used as READ-end while the latter one
+    // is used as WRITE-end.
+    //
     // _______________    _______________    _________
     // | cat foo.txt |    | grep -i abc |    | wc -l |
     // ---------------    ---------------    ---------
     //             ^        ^         ^        ^
     //       WRITE |--------|  R / W  |--------| READ
     //       END               E   E             END
+    //                    (current child)
+    //         -Pipe to Current-   -Pipe to Next-
 
 
     // Pipe that connects the previous forked process with
