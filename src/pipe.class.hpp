@@ -38,18 +38,33 @@
  */
 class Pipe {
 private:
+    /**
+     * The file descriptors returned by pipe() (libc).
+     */
     int fds[2] = {0, 0};
     /**
-     * The main purpose of the lock is to make sure that
-     * this operation is done exactly once per pipe.
+     * The main purpose of the lock is to make sure that a Pipe
+     * is exactly once marked as "write and" or "read end" in
+     * it's address space. Good for debugging and finding errors.
+     * There are no real scenarios where a process would try
+     * to mark a Pipe multiple times.
      */
-    bool read_end_closed = false;
+    bool locked = false;
     /**
-     * The main purpose of the lock is to make sure that
-     * this operation is done exactly once per pipe.
+     * Closes the specified end of the pipe in the current address space.
+     *
+     * @param pipeEnd
      */
-    bool write_end_closed = false;
-    void close_pipe_end(PipeEnd pipeEnd);
+    void close_pipe_end(PipeEnd pipeEnd) const;
+
+    /**
+     * Connects the pipe end with the specified file descriptor,
+     * i.e. duplicates STDIN or STDOUT into the proper Pipe-end.
+     *
+     * @param pipeEnd
+     * @param file_no STDIN_FILENO or STDOUT_FILENO
+     */
+    void connect_pipe_end(PipeEnd pipeEnd, int file_no) const;
 public:
     Pipe();
 
@@ -66,13 +81,15 @@ public:
 
     /**
      * Closes all FDs. Must be called in parent process
-     * before the object is deleted.
+     * before the object is deleted in order to avoid
+     * deadlocks. Otherwise Linux things there are open
+     * readers/writers which becomes a problem when the
+     * internal buffer is full.
      */
-    // TODO do in Destructor?!
     void close_all() const;
 
     /**
-     * Creates a string representaiton.
+     * Creates a string representation.
      */
-    std::string toString() const;
+    [[nodiscard]] std::string toString() const;
 };

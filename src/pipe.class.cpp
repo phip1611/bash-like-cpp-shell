@@ -20,40 +20,30 @@ Pipe::Pipe() {
 }
 
 void Pipe::as_write_end() {
-    if (this->read_end_closed) {
+    if (this->locked) {
         std::cerr << "Can't close " << pipe_end::to_string(PipeEnd::READ)
-                  << " end of pipe because the pipe is already locked!" << std::endl;
+                  << " end of pipe because the pipe is already locked! "
+                  << "Should only be called ONCE per Pipe!"
+                  << std::endl;
         return;
     }
+    this->locked = true;
     this->close_pipe_end(PipeEnd::READ);
-    this->read_end_closed = true;
-
-    // Makes write end fd a copy of STDOUT_FILENO
-    // in other words: connects stdout with write end of pipe
-    int res = dup2(this->fds[PipeEnd::WRITE], STDOUT_FILENO);
-    if (res == -1) {
-        std::cerr << "Can't connect write end of pipe with stdout: " << strerror(errno) << std::endl;
-    }
+    this->connect_pipe_end(PipeEnd::WRITE, STDOUT_FILENO);
 }
 
 void Pipe::as_read_end() {
-    if (this->write_end_closed) {
+    if (this->locked) {
         std::cerr << "Can't close " << pipe_end::to_string(PipeEnd::WRITE)
                   << " end of pipe because the pipe is already locked!" << std::endl;
         return;
     }
+    this->locked = true;
     this->close_pipe_end(PipeEnd::WRITE);
-    this->write_end_closed = true;
-
-    // Makes read end fd a copy of STDIN_FILENO
-    // in other words: connects stdin with read end of pipe
-    int res = dup2(this->fds[PipeEnd::READ], STDIN_FILENO);
-    if (res == -1) {
-        std::cerr << "Can't connect read end of pipe with stdin: " << strerror(errno) << std::endl;
-    }
+    this->connect_pipe_end(PipeEnd::READ, STDIN_FILENO);
 }
 
-void Pipe::close_pipe_end(PipeEnd pipeEnd) {
+void Pipe::close_pipe_end(PipeEnd pipeEnd) const {
     int res = close(this->fds[pipeEnd]);
     if (res == -1) {
         std::cerr << "Can't close " << pipe_end::to_string(pipeEnd)
@@ -61,18 +51,9 @@ void Pipe::close_pipe_end(PipeEnd pipeEnd) {
     }
 }
 
-// TODO do in Destructor?!
 void Pipe::close_all() const {
-    int res = close(this->fds[PipeEnd::READ]);
-    if (res == -1) {
-        std::cerr << "Can't close " << pipe_end::to_string(PipeEnd::READ)
-                  << " end of pipe because " << strerror(errno) << "!" << std::endl;
-    }
-    res = close(this->fds[PipeEnd::WRITE]);
-    if (res == -1) {
-        std::cerr << "Can't close " << pipe_end::to_string(PipeEnd::WRITE)
-                  << " end of pipe because " << strerror(errno) << "!" << std::endl;
-    }
+    this->close_pipe_end(PipeEnd::READ);
+    this->close_pipe_end(PipeEnd::WRITE);
 }
 
 std::string Pipe::toString() const {
@@ -80,9 +61,24 @@ std::string Pipe::toString() const {
     stringStream << "Pipe {\n";
     stringStream << "  fd[READ]: " << this->fds[PipeEnd::READ] << ",\n";
     stringStream << "  fd[WRITE]: " << this->fds[PipeEnd::WRITE] << ",\n";
-    stringStream << "  read_end_closed: " << this->read_end_closed << ",\n";
-    stringStream << "  write_end_closed: " << this->write_end_closed << ",\n";
+    stringStream << "  locked: " << this->locked << ",\n";
     stringStream << "}";
 
     return stringStream.str(); // creates a copy
+}
+
+void Pipe::connect_pipe_end(PipeEnd pipeEnd, int file_no) const {
+    assert(file_no == STDIN_FILENO || file_no == STDOUT_FILENO);
+
+    // duplicates STDIN into fds[READ_END] or
+    // STDOUT into fds[WRITE_END]
+    int res = dup2(this->fds[pipeEnd], file_no);
+    if (res == -1) {
+        std::cerr << "Can't connect "
+                  << pipe_end::to_string(pipeEnd)
+                  <<  "-end of pipe with "
+                  << (file_no == STDIN_FILENO ? "STDIN" : "STDOUT")
+                  << ": "
+                  << strerror(errno) << std::endl;
+    }
 }
