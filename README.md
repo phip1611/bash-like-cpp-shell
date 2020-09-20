@@ -10,11 +10,14 @@ rewrote ugly parts in C++.
 
 **Focus is educational and for personal experience - not a production-ready shell!**
 
-## Code quality
+## Code and code quality
 I'm not an experienced C++ developer. My testing so far (valgrind) shows I 
 have no memory leaks and the overall code quality looks at least "okay" to 
 me. At least the important parts! The parsing and validation stuff is not 
-really solid, tho.
+really solid, tho. But I spend some time into making the actual execution
+and Pipe creation + handling nice.
+
+**Important parts of code**: See `action.cpp: action_command()` and `pipe.class.cpp: Pipe()`.
 
 ## Functionality
 This shell focuses on **proper user input**! Validation is only very coarse-grained and 
@@ -48,6 +51,9 @@ Runs on UNIX systems, like Linux distributions or Mac OS.
 #### Mac OS
 - `$ brew install readline` (installs only the runtime library, not the header files; therefore the header files are in ./include)
 - `$ make && ./phipsshell`
+
+## Important parts of code
+See `action.cpp: action_command()` and `pipe.class.cpp: Pipe()`.
 
 ## Why Makefile and CMakeLists.txt?
 At the begin there was only the makefile. Because I wanted to use Jetbrains CLion I
