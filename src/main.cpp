@@ -129,6 +129,8 @@ void check_bg_processes() {
 
         // waitpid WNOHANG does the magic here :)
         int status_code[1];
+        // status code IS NOT exit code!
+        // see https://linux.die.net/man/2/waitpid
         pid_t res = waitpid(p->getPid(), status_code, WNOHANG);
         // returns the pid on sucess
         if (res != 0) {

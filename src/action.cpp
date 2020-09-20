@@ -131,10 +131,14 @@ void action_command(ParsedInputData *data) {
                 // handle '<'
                 if (curr_cmd.is_first() && curr_cmd.getInputRedFile().has_value()) {
                     FILE *ir = fopen(curr_cmd.getInputRedFile()->c_str(), "r");
+                    // TODO check for ir is null
                     dup2(fileno(ir), STDIN_FILENO);
                 }
                 // handle '>'
                 if (curr_cmd.is_last() && curr_cmd.getOutputRedFile().has_value()) {
+                    // note that append won't work here because we only use the
+                    // '> out.file' functionality but not '>> out.file' which
+                    // would require the O_APPEND flag!
                     FILE *of = fopen(curr_cmd.getOutputRedFile()->c_str(), "w");
                     dup2(fileno(of), STDOUT_FILENO);
                 }
