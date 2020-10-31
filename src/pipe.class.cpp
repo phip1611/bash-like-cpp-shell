@@ -21,8 +21,8 @@ Pipe::Pipe() {
     int res = pipe(this->fds);
     if (res == -1) {
         std::cerr << "pipe() failed with error: " << strerror(errno) << std::endl;
+        exit(errno);
     }
-    exit(errno);
 }
 
 void Pipe::as_write_end() {
