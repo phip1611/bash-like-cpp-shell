@@ -7,6 +7,8 @@
 
 // Pipe end enum.
 
+#include <iostream>
+
 #include "pipe-end.enum.hpp"
 
 std::string pipe_end::to_string(const PipeEnd pe) {
@@ -16,5 +18,8 @@ std::string pipe_end::to_string(const PipeEnd pe) {
         case WRITE:
             return "WRITE";
     }
+    // here be dragons
+    std::cerr << "Invalid value for 'PipeEnd'!" << std::endl;
+    exit(-EINVAL);
 }
 

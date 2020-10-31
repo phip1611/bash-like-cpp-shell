@@ -9,6 +9,7 @@
 
 #include <sstream>
 #include <optional>
+#include <cstring>
 
 #include "command.class.hpp"
 

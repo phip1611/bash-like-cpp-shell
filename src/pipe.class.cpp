@@ -10,13 +10,19 @@
 #include <zconf.h>
 #include <iostream>
 #include <sstream>
+#include <cstring>
+#include <cassert>
 
 #include "pipe.class.hpp"
 #include "pipe-end.enum.hpp"
 
 Pipe::Pipe() {
     // create a pipe
-    pipe(this->fds);
+    int res = pipe(this->fds);
+    if (res == -1) {
+        std::cerr << "pipe() failed with error: " << strerror(errno) << std::endl;
+    }
+    exit(errno);
 }
 
 void Pipe::as_write_end() {

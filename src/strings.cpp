@@ -158,7 +158,7 @@ void rtrim(std::string &s) {
 
 // currently unused but perhaps useful in future if better validation code comes
 // or a good regex that actually works properly
-bool str_regex_is_full_match(const std::string &str, const std::regex &regex) {
+/* bool str_regex_is_full_match(const std::string &str, const std::regex &regex) {
     std::smatch m;
     bool found;
     try {
@@ -170,11 +170,11 @@ bool str_regex_is_full_match(const std::string &str, const std::regex &regex) {
         //std::cerr << e.what() << std::endl;
     }
 
-    /*std::cout << "found?: " << found << std::endl;
+    // std::cout << "found?: " << found << std::endl;
     if (found) {
         std::cout << "length of string: " << haystack.length() << std::endl;
         std::cout << "length of match: " << m.length() << std::endl;
-    }*/
+    }
 
     return found && str.length() == m.length();
-}
+}*/

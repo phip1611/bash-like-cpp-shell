@@ -10,7 +10,7 @@
 #include "bg-process-state.class.hpp"
 
 // constructor with pid
-BgProcessState::BgProcessState(pid_t pid) : pid(pid) {}
+BgProcessState::BgProcessState(pid_t pid_new) : pid(pid_new) {}
 
 void BgProcessState::set_done() {
     this->done = true;
