@@ -3,6 +3,8 @@
 # This file/project is licensed under a MIT license.
 # You can find the LICENSE file in the repository.
 
+CC=g++
+
 SRC_DIR = src
 OBJ_DIR = build
 
@@ -29,11 +31,11 @@ endif
 # End: Mac OS specific
 
 phipsshell: $(OBJ)
-	g++ $(LINK_DIRS) $(CPPFLAGS) -o $@ $+ $(CPPLFLAGS)
+	$(CC) $(LINK_DIRS) $(CPPFLAGS) -o $@ $+ $(CPPLFLAGS)
 
                                # | is a dependency; create if doesn't exist
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	g++ $(INC_DIRS) $(CPPFLAGS) -c -o $@ $<
+	$(CC) $(INC_DIRS) $(CPPFLAGS) -c -o $@ $<
 
 # if OBJ_DIR doesn't exist: create
 $(OBJ_DIR):
