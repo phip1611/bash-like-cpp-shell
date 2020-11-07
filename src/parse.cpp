@@ -327,6 +327,11 @@ bool check_executable_path_exists(std::string * command) {
 
     for (auto & part : path_var_parts) {
         DIR * d = opendir(part.c_str());
+        if (d == nullptr) {
+            // protect against malformed path
+            // e.g. "foobar//something"
+            continue;
+        }
         struct dirent * direntry;
         while ((direntry = readdir(d)) != nullptr) {
             // skip '.' and '..'
