@@ -1,8 +1,8 @@
-phipsshell
-
-cmake-build-debug*/
 .idea/
-
-build/
-
 .vscode/
+bin/
+build/
+cmake-build-*/
+
+phipsshell
+result*

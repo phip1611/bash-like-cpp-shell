@@ -187,7 +187,7 @@ bool verify_is_cd_input(const std::string *const input) {
     // check if it begins with "cd"
     if (strncmp(c_str, "cd", 2) == 0 && c_str[2] == ' ') {
         // check if string is not ending here
-        if (&c_str[3] == nullptr) {
+        if (c_str[3] == '\0') {
             fprintf(stderr, "Please enter a directory for cd!\n");
         }
         // decoupling parsing and performing action
@@ -335,8 +335,8 @@ bool check_executable_path_exists(std::string * command) {
         struct dirent * direntry;
         while ((direntry = readdir(d)) != nullptr) {
             // skip '.' and '..'
-            if ((direntry->d_name[0] == '.' && &direntry->d_name[1] == nullptr)
-                || (direntry->d_name[0] == '.' && direntry->d_name[1] == '.' && &direntry->d_name[2] == nullptr)) {
+            if ((direntry->d_name[0] == '.' && direntry->d_name[1] == '\0')
+                || (direntry->d_name[0] == '.' && direntry->d_name[1] == '.' && direntry->d_name[2] == '\0')) {
                 continue;
             }
 

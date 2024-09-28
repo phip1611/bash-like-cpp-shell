@@ -7,11 +7,11 @@
 
 // Pipe class.
 
-#include <zconf.h>
 #include <iostream>
 #include <sstream>
 #include <cstring>
 #include <cassert>
+#include <unistd.h>
 
 #include "pipe.class.hpp"
 #include "pipe-end.enum.hpp"

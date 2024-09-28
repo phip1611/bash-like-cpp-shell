@@ -8,7 +8,6 @@
 // functions that handles the actual action that the user wants to do
 // (after parsing is done)
 
-#include <zconf.h>
 #include <cstring>
 #include <sys/wait.h>
 
