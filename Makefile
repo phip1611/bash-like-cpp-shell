@@ -32,7 +32,7 @@ install: phipsshell
 
 .PHONY: clean
 clean:
-	rm -rf $(OBJ_DIR) phipsshell
+	rm -rf $(OBJ_DIR) phipsshell bin
 
 # follow dependency files (to trigger recompile if file changed)
 -include $(DEP)
