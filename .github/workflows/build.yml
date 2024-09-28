@@ -1,0 +1,50 @@
+name: Build
+
+on:
+  merge_group:
+  pull_request:
+  push:
+
+env:
+  CARGO_TERM_COLOR: always
+
+jobs:
+  build_regular:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      #- name: Install dependencies
+     #   run: apt update && apt install ->
+      - name: check format
+        run: make fmt_check
+      - name: build
+        run: make -j $(nproc)
+      - name: test
+        timeout-minutes: 1
+        run: echo "cat tests/testfile_65kb.txt | cat | wc -l" | ./phipsshell
+
+  build_nix_shell:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@V27
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: check format
+        run: nix develop --command bash -c  "make fmt_check"
+      - name: build
+        run: nix develop --command bash -c  "make -j $(nproc)"
+      - name: test
+        timeout-minutes: 1
+        run: nix develop --command bash -c 'echo "cat tests/testfile_65kb.txt | cat | wc -l" | ./phipsshell | grep -q 651'
+
+  build_nix:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: cachix/install-nix-action@V27
+      - uses: DeterminateSystems/magic-nix-cache-action@main
+      - name: nix build
+        run: nix build .
+      - name: nix test
+        timeout-minutes: 1
+        run: echo "cat tests/testfile_65kb.txt | cat | wc -l" | nix run . | grep -q 651

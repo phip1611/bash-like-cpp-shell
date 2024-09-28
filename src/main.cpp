@@ -114,8 +114,6 @@ static void sig_handler(int sig) {
   if (sig == SIGINT) {
     // Interrupt from keyboard; Ctrl+C
     // don't stop our shell with an error (default behaviour)
-    // TODO I don't know why this check is necessary, because SIGINT stands
-    // already in signal() function call..
     printf("\n");            // Move to a new line
     rl_on_new_line();        // Regenerate the prompt on a newline
     rl_replace_line("", 0);  // Clear the previous text
