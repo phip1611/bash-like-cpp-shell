@@ -17,7 +17,7 @@
  *
  * @param data parsed input data
  */
-void action_cd(ParsedInputData * data);
+void action_cd(ParsedInputData* data);
 
 /**
  * Performs a command chain action. This means
@@ -26,11 +26,11 @@ void action_cd(ParsedInputData * data);
  *
  * @param data parsed input data
  */
-void action_command(ParsedInputData * data);
+void action_command(ParsedInputData* data);
 
 /**
  * Performs an alias action, like storing a new alias.
  *
  * @param data parsed input data
  */
-void action_alias(ParsedInputData * data, InputKind aliasKind);
+void action_alias(ParsedInputData* data, InputKind aliasKind);

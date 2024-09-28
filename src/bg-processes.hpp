@@ -13,6 +13,7 @@
 #include "bg-process-state.class.hpp"
 
 /**
- * All background processes (actually only the actives ones, because old ones should be removed; todo!).
+ * All background processes (actually only the actives ones, because old ones
+ * should be removed; todo!).
  */
-extern std::vector<BgProcessState *> bg_processes;
+extern std::vector<BgProcessState*> bg_processes;

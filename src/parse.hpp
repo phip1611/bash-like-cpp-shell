@@ -30,8 +30,7 @@
  * @param input normalized input string
  * @return input is a cd input/action
  */
-bool verify_is_cd_input(std::string const * const input);
-
+bool verify_is_cd_input(std::string const* const input);
 
 /**
  * Checks if input is a command input/action.
@@ -44,7 +43,7 @@ bool verify_is_cd_input(std::string const * const input);
  * @param input normalized input string
  * @return input is a command input/action
  */
-bool verify_is_command_input(std::string const * const input);
+bool verify_is_command_input(std::string const* const input);
 
 /**
  * Checks if input is a get alias input/action. This function only provides
@@ -55,7 +54,7 @@ bool verify_is_command_input(std::string const * const input);
  * @param input normalized input string
  * @return input is a get alias input/action
  */
-bool verify_is_get_alias_input(std::string const * const input);
+bool verify_is_get_alias_input(std::string const* const input);
 
 /**
  * Checks if input is a set alias input/action. This function only provides
@@ -66,7 +65,7 @@ bool verify_is_get_alias_input(std::string const * const input);
  * @param input normalized input string
  * @return input is a set alias input/action
  */
-bool verify_is_set_alias_input(std::string const * const input);
+bool verify_is_set_alias_input(std::string const* const input);
 
 /**
  * Checks if input is a un alias input/action. This function only provides
@@ -77,7 +76,7 @@ bool verify_is_set_alias_input(std::string const * const input);
  * @param input normalized input string
  * @return input is a un alias input/action
  */
-bool verify_is_un_alias_input(std::string const * const input);
+bool verify_is_un_alias_input(std::string const* const input);
 
 /**
  * Parses a normalized input into the corresponding, structured data that
@@ -86,7 +85,7 @@ bool verify_is_un_alias_input(std::string const * const input);
  * @param normalized_input
  * @return
  */
-ParsedInputData parse(std::string const * const normalized_input);
+ParsedInputData parse(std::string const* const normalized_input);
 
 /**
  * Interprets the input as normalized string of type "cd input" and
@@ -95,33 +94,39 @@ ParsedInputData parse(std::string const * const normalized_input);
  * @param input
  * @return
  */
-std::string parse_cd_data(std::string const * const input);
+std::string parse_cd_data(std::string const* const input);
 
 /**
- * Parsed a complete command chain string with piped commands and I/O redirection.
+ * Parsed a complete command chain string with piped commands and I/O
+ * redirection.
  * @param input
  * @return
  */
-CommandChain parse_command_chain(std::string const * const input);
+CommandChain parse_command_chain(std::string const* const input);
 
 /**
  * Parses a basic command. A command consists of the actual command/executable,
- * the args and I/O redirection. The input string must be trimmed and normalized!
+ * the args and I/O redirection. The input string must be trimmed and
+ * normalized!
  * @param input
  * @param i index of element (Starting at 0)
  * @param n total number of elements
  * @return
  */
-Command parse_command_chain_command(std::string const * const input, size_t i, size_t n);
+Command parse_command_chain_command(std::string const* const input,
+                                    size_t i,
+                                    size_t n);
 
 /**
- * Helper function for parse_command_chain_command(). Enriches the command with data for
- * either the input redirect or the output redirect.
- * This changes/modifies the command object.
+ * Helper function for parse_command_chain_command(). Enriches the command with
+ * data for either the input redirect or the output redirect. This
+ * changes/modifies the command object.
  * @param cmd
  * @param basic_command_str
  */
-void parse_command_chain_command_io_redirection(Command & cmd, std::string const * const basic_command_str);
+void parse_command_chain_command_io_redirection(
+    Command& cmd,
+    std::string const* const basic_command_str);
 
 /**
  * Parses the args for a command.
@@ -130,13 +135,15 @@ void parse_command_chain_command_io_redirection(Command & cmd, std::string const
  * @param basic_command_string_parts
  * @return args vector
  */
-std::vector<std::string> parse_command_chain_command_args(std::vector<std::string> & basic_command_string_parts);
+std::vector<std::string> parse_command_chain_command_args(
+    std::vector<std::string>& basic_command_string_parts);
 
 /**
- * Checks if the specified executable exists and is executable either in $PATH or in the file system.
- * (e.g. "./my_bin" or "/usr/bin/cat") or searched in $PATH.
+ * Checks if the specified executable exists and is executable either in $PATH
+ * or in the file system. (e.g. "./my_bin" or "/usr/bin/cat") or searched in
+ * $PATH.
  *
  * @param command
  * @return file exists and is executable
  */
-bool check_executable_path_exists(std::string * command);
+bool check_executable_path_exists(std::string* command);

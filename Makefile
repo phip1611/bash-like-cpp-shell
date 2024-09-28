@@ -48,5 +48,14 @@ install: phipsshell
 clean:
 	rm -rf $(OBJ_DIR) phipsshell bin
 
+.PHONY: fmt
+fmt:
+	find src -iname \*.hpp -o -iname \*.h -o -iname \*.cpp -o -iname \*.c | xargs clang-format --style=Chromium -i --Werror
+	echo All fiels in src/ have been formatted.
+
+.PHONY: fmt_check
+fmt_check:
+	find src -iname \*.hpp -o -iname \*.h -o -iname \*.cpp -o -iname \*.c | xargs clang-format --style=Chromium --dry-run --Werror
+
 # follow dependency files (to trigger recompile if file changed)
 -include $(DEP)

@@ -13,13 +13,13 @@
 BgProcessState::BgProcessState(pid_t pid_new) : pid(pid_new) {}
 
 void BgProcessState::set_done() {
-    this->done = true;
+  this->done = true;
 }
 
 bool BgProcessState::isDone() const {
-    return done;
+  return done;
 }
 
 pid_t BgProcessState::getPid() const {
-    return pid;
+  return pid;
 }
