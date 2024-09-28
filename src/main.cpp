@@ -133,7 +133,7 @@ void check_bg_processes() {
     // status code IS NOT exit code!
     // see https://linux.die.net/man/2/waitpid
     pid_t res = waitpid(p->getPid(), status_code, WNOHANG);
-    // returns the pid on sucess
+    // returns the pid on success
     if (res != 0) {
       printf("-- BG-Process with PID %d finished with Status Code %d\n",
              p->getPid(), status_code[0]);

@@ -206,7 +206,7 @@ CommandChain parse_command_chain(const std::string* const input) {
   std::vector<std::string> basic_command_strs = str_split_char(input, '|');
   for (auto& basic_command_str : basic_command_strs) {
     trim(basic_command_str);
-    // we want to trim the strings because "ls | cat" splitted by '|' would
+    // we want to trim the strings because "ls | cat" split by '|' would
     // otherwise have spaces at the begin/end
   }
 

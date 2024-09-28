@@ -51,7 +51,7 @@ clean:
 .PHONY: fmt
 fmt:
 	find src -iname \*.hpp -o -iname \*.h -o -iname \*.cpp -o -iname \*.c | xargs clang-format --style=Chromium -i --Werror
-	echo All fiels in src/ have been formatted.
+	echo "All files in src/ have been formatted."
 
 .PHONY: fmt_check
 fmt_check:
