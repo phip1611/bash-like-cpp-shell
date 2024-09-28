@@ -96,7 +96,7 @@ bool verify_is_set_alias_input(const std::string *const input) {
         return false;
     }
 
-    unsigned eq_sign_i = input->find('=');
+    size_t eq_sign_i = input->find('=');
     if (eq_sign_i == -1u) {
         fprintf(stderr, "Syntax is: alias <alias-name>=<alias-value>\n");
         return false;
@@ -219,7 +219,7 @@ CommandChain parse_command_chain(const std::string *const input) {
         // have spaces at the begin/end
     }
 
-    for (unsigned i = 0; i < basic_command_strs.size(); i++) {
+    for (size_t i = 0; i < basic_command_strs.size(); i++) {
         basic_commands.push_back(
                 parse_command_chain_command(
                         &basic_command_strs[i],
@@ -239,7 +239,7 @@ CommandChain parse_command_chain(const std::string *const input) {
     return commandChain;
 }
 
-Command parse_command_chain_command(const std::string *const input, unsigned i, unsigned n) {
+Command parse_command_chain_command(const std::string *const input, size_t i, size_t n) {
     Command cmd;
 
     cmd.setIsBegin(i == 0);
@@ -277,7 +277,7 @@ void parse_command_chain_command_io_redirection(Command & cmd, const std::string
     // output file && is last
     if (cmd.is_in_middle()) return;
 
-    for (unsigned i = 0; i < basic_command_str->size(); i++) {
+    for (size_t i = 0; i < basic_command_str->size(); i++) {
         char c = (*basic_command_str)[i];
         // actually one could do some more checking here, like
         // if cmd.pos == BEGIN and c == '<' but I wanted to decouple the

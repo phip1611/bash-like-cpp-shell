@@ -112,7 +112,7 @@ CommandChain parse_command_chain(std::string const * const input);
  * @param n total number of elements
  * @return
  */
-Command parse_command_chain_command(std::string const * const input, unsigned i, unsigned n);
+Command parse_command_chain_command(std::string const * const input, size_t i, size_t n);
 
 /**
  * Helper function for parse_command_chain_command(). Enriches the command with data for

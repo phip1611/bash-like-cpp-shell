@@ -188,6 +188,6 @@ void action_command(ParsedInputData *data) {
  *
  * @param data parsed input data
  */
-void action_alias(ParsedInputData *data, InputKind aliasKind) {
+void action_alias( [[maybe_unused]] ParsedInputData *data, [[maybe_unused]] InputKind aliasKind) {
     // TODO
 }

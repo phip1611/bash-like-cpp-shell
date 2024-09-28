@@ -14,13 +14,13 @@
 #include "strings.hpp"
 
 std::string normalize_input(char const * const input) {
-    int spaces_at_begin = 0;
-    int spaces_at_end = 0;
-    int str_len = 0;
+    size_t spaces_at_begin = 0;
+    size_t spaces_at_end = 0;
+    size_t str_len = 0;
 
     assert(input != nullptr);
     str_len = strlen(input);
-    for (int i = 0; i < str_len; i++) {
+    for (size_t i = 0; i < str_len; i++) {
         if (input[i] == ' ') {
             spaces_at_begin++;
         } else {
@@ -28,8 +28,8 @@ std::string normalize_input(char const * const input) {
         }
     }
 
-    for (int i = 0; i < str_len; i++) {
-        int i_rev = str_len - 1 - i; // reversed iteration; backwards
+    for (size_t i = 0; i < str_len; i++) {
+        size_t i_rev = str_len - 1 - i; // reversed iteration; backwards
         if (input[i_rev] == ' ') {
             spaces_at_end++;
         } else {
@@ -46,8 +46,8 @@ std::string normalize_input(char const * const input) {
     std::string str;
     str.reserve(str_len - spaces_at_begin - spaces_at_end);
 
-    int space_count = 0;
-    for (int i = spaces_at_begin; i < str_len - spaces_at_end; i++) {
+    size_t space_count = 0;
+    for (size_t i = spaces_at_begin; i < str_len - spaces_at_end; i++) {
         char c = input[i];
         if (c == ' ') {
             space_count++;
@@ -70,11 +70,11 @@ bool str_starts_with(std::string const * const haystack, std::string const * con
     return false;
 }
 
-bool str_contains_single_word_from_to(const std::string *const input, unsigned from, unsigned to) {
+bool str_contains_single_word_from_to(const std::string *const input, size_t from, size_t to) {
     assert(from <= to);
     assert(to <= input->length());
     // assert(from <= input->length()); already proved because of the partial order of from, to and input length :)
-    for (unsigned i = from; i < to; i++) {
+    for (size_t i = from; i < to; i++) {
         char c = (*input)[i];
         if (c == ' ') {
             // if space found
@@ -84,15 +84,15 @@ bool str_contains_single_word_from_to(const std::string *const input, unsigned f
     return true;
 }
 
-bool str_contains_only_given_chars(const std::string *const input, unsigned int from, unsigned int to,
+bool str_contains_only_given_chars(const std::string *const input, size_t from, size_t to,
                                    const std::string *const chars) {
     assert(from <= to);
     assert(to <= input->length());
 
-    for (unsigned i = from; i < to; i++) {
+    for (size_t i = from; i < to; i++) {
         bool found_current_char_in_allowed_chars = false;
         char const c = (*input)[i];
-        for (unsigned j = 0; j < chars->length(); j++) {
+        for (size_t j = 0; j < chars->length(); j++) {
             char const allowed_char = (*chars)[j];
             if (c == allowed_char) {
                 found_current_char_in_allowed_chars = true;

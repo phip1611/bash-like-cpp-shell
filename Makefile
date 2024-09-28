@@ -12,7 +12,18 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 DEP = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.d)
 
-CPPFLAGS  = -ggdb -MMD -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17 -O2
+CPPFLAGS  = \
+	-std=c++23 -ggdb -O3 \
+	-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS \
+	-Wall -Wformat -Wformat=2 -Wconversion -Wimplicit-fallthrough \
+	-Werror=format-security -Wpedantic -pedantic \
+	-Wextra -Wcast-align -Wcast-qual -Wdisabled-optimization \
+	-Wduplicated-branches -Wduplicated-cond -Wlogical-op \
+	-Wnull-dereference -Woverloaded-virtual -Wpointer-arith  \
+	-fcf-protection=return \
+	-Wshadow -Weffc++ -Wswitch-enum -Wvla -Wuseless-cast \
+	-Wl,-z,nodlopen -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now \
+    -Wl,--as-needed -Wl,--no-copy-dt-needed-entries
 CPPLFLAGS = -lreadline
 
 phipsshell: $(OBJ)
@@ -24,6 +35,9 @@ $(OBJ_DIR):
 $(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
 	$(CC) $(INC_DIRS) $(CPPFLAGS) -c -o $@ $<
 
+#.PHONY: test
+#test:
+#	$(MAKE) -C tests
 
 .PHONY: install
 install: phipsshell
