@@ -12,39 +12,50 @@ SRC = $(wildcard $(SRC_DIR)/*.cpp)
 OBJ = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.o)
 DEP = $(SRC:$(SRC_DIR)/%.cpp=$(OBJ_DIR)/%.d)
 
-# don't worry; because of debug symbols the binary get's up to 2MB larger than in my
-# previous C project; with -O2 (or O3) additional 2 MB bin size
-CPPFLAGS  = -ggdb -MMD -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17 -O2
+CPPFLAGS  = \
+	-std=c++23 -ggdb -O3 \
+	-U_FORTIFY_SOURCE -D_FORTIFY_SOURCE=3 -D_GLIBCXX_ASSERTIONS \
+	-Wall -Wformat -Wformat=2 -Wconversion -Wimplicit-fallthrough \
+	-Werror=format-security -Wpedantic -pedantic \
+	-Wextra -Wcast-align -Wcast-qual -Wdisabled-optimization \
+	-Wduplicated-branches -Wduplicated-cond -Wlogical-op \
+	-Wnull-dereference -Woverloaded-virtual -Wpointer-arith  \
+	-fcf-protection=return \
+	-Wshadow -Weffc++ -Wswitch-enum -Wvla -Wuseless-cast \
+	-Wl,-z,nodlopen -Wl,-z,noexecstack -Wl,-z,relro -Wl,-z,now \
+    -Wl,--as-needed -Wl,--no-copy-dt-needed-entries
 CPPLFLAGS = -lreadline
-
-# Mac OS specific
-# only use the libreadline header files in this repository
-# if on MacOS/Darwin. Otherwise use the ones that have been
-# installed via package manager in linux distribution (most recent ones)
-# the reason for this is: `brew install readline` doesn't 
-# install header files
-UNAME_S := $(shell uname -s)
-ifeq ($(UNAME_S),Darwin)
-	INC_DIRS=-I./include
-	LINK_DIRS=-L/usr/local/opt/readline/lib/ # location where brew installs readline
-endif
-# End: Mac OS specific
 
 phipsshell: $(OBJ)
 	$(CC) $(LINK_DIRS) $(CPPFLAGS) -o $@ $+ $(CPPLFLAGS)
 
-                               # | is a dependency; create if doesn't exist
-$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
-	$(CC) $(INC_DIRS) $(CPPFLAGS) -c -o $@ $<
-
-# if OBJ_DIR doesn't exist: create
 $(OBJ_DIR):
 	mkdir -p $(OBJ_DIR)
 
-.PHONY: clean
+$(OBJ_DIR)/%.o: $(SRC_DIR)/%.cpp | $(OBJ_DIR)
+	$(CC) $(INC_DIRS) $(CPPFLAGS) -c -o $@ $<
 
+#.PHONY: test
+#test:
+#	$(MAKE) -C tests
+
+.PHONY: install
+install: phipsshell
+	install -d $(DESTDIR)/bin
+	install -m 755 $< $(DESTDIR)/bin
+
+.PHONY: clean
 clean:
-	rm -rf $(OBJ_DIR) phipsshell
+	rm -rf $(OBJ_DIR) phipsshell bin
+
+.PHONY: fmt
+fmt:
+	find src -iname \*.hpp -o -iname \*.h -o -iname \*.cpp -o -iname \*.c | xargs clang-format --style=Chromium -i --Werror
+	echo "All files in src/ have been formatted."
+
+.PHONY: fmt_check
+fmt_check:
+	find src -iname \*.hpp -o -iname \*.h -o -iname \*.cpp -o -iname \*.c | xargs clang-format --style=Chromium --dry-run --Werror
 
 # follow dependency files (to trigger recompile if file changed)
 -include $(DEP)

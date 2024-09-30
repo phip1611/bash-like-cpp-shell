@@ -9,4 +9,4 @@
 
 #include "bg-processes.hpp"
 
-std::vector<BgProcessState *> bg_processes;
+std::vector<BgProcessState*> bg_processes;

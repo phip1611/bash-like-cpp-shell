@@ -1,5 +1,8 @@
 # phipsshell - a simple bash-like shell written in C++
 
+<!-- This is an old project from 2020. I slightly modernized it in Mid-2024 but
+     this was not a major refactoring. -->
+
 ## About
 I had to write a shell for an uni project a few semesters ago. I did this
 in C and the outcome was quite interesting. I learned a lot about `pipes`, `file
@@ -11,16 +14,16 @@ rewrote ugly parts in C++.
 **Focus is educational and for personal experience - not a production-ready shell!**
 
 ## Code and code quality
-I'm not an experienced C++ developer. My testing so far (valgrind) shows I 
-have no memory leaks and the overall code quality looks at least "okay" to 
-me. At least the important parts! The parsing and validation stuff is not 
+I'm not an experienced C++ developer. My testing so far (valgrind) shows I
+have no memory leaks and the overall code quality looks at least "okay" to
+me. At least the important parts! The parsing and validation stuff is not
 really solid, tho. But I spend some time into making the actual execution
 and Pipe creation + handling nice.
 
 **Important parts of code**: See `action.cpp: action_command()` and `pipe.class.cpp: Pipe()`.
 
 ## Functionality
-This shell focuses on **proper user input**! Validation is only very coarse-grained and 
+This shell focuses on **proper user input**! Validation is only very coarse-grained and
 definitely not bullet-proof! The focus here is on understanding pipes and not in writing
 a good parser. **Only single spaces** are allowed and **no quote marks!**
 `echo "foo  bar"` won't work.
@@ -57,7 +60,7 @@ See `action.cpp: action_command()` and `pipe.class.cpp: Pipe()`.
 
 ## Why Makefile and CMakeLists.txt?
 At the begin there was only the makefile. Because I wanted to use Jetbrains CLion I
-also added a CMakeLists.txt. Both files works fine. I keep the Makefile because I 
+also added a CMakeLists.txt. Both files works fine. I keep the Makefile because I
 think it's 'nice' and I don't want to loose it.
 
 ## Dependencies

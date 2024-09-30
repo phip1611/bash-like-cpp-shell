@@ -37,59 +37,60 @@
  *         -Pipe to Current-   -Pipe to Next-
  */
 class Pipe {
-private:
-    /**
-     * The file descriptors returned by pipe() (libc).
-     */
-    int fds[2] = {0, 0};
-    /**
-     * The main purpose of the lock is to make sure that a Pipe
-     * is exactly once marked as "write and" or "read end" in
-     * it's address space. Good for debugging and finding errors.
-     * There are no real scenarios where a process would try
-     * to mark a Pipe multiple times.
-     */
-    bool locked = false;
-    /**
-     * Closes the specified end of the pipe in the current address space.
-     *
-     * @param pipeEnd
-     */
-    void close_pipe_end(PipeEnd pipeEnd) const;
+ private:
+  /**
+   * The file descriptors returned by pipe() (libc).
+   */
+  int fds[2] = {0, 0};
+  /**
+   * The main purpose of the lock is to make sure that a Pipe
+   * is exactly once marked as "write and" or "read end" in
+   * it's address space. Good for debugging and finding errors.
+   * There are no real scenarios where a process would try
+   * to mark a Pipe multiple times.
+   */
+  bool locked = false;
+  /**
+   * Closes the specified end of the pipe in the current address space.
+   *
+   * @param pipeEnd
+   */
+  void close_pipe_end(PipeEnd pipeEnd) const;
 
-    /**
-     * Connects the pipe end with the specified file descriptor,
-     * i.e. duplicates STDIN or STDOUT into the proper Pipe-end.
-     *
-     * @param pipeEnd
-     * @param file_no STDIN_FILENO or STDOUT_FILENO
-     */
-    void connect_pipe_end(PipeEnd pipeEnd, int file_no) const;
-public:
-    Pipe();
+  /**
+   * Connects the pipe end with the specified file descriptor,
+   * i.e. duplicates STDIN or STDOUT into the proper Pipe-end.
+   *
+   * @param pipeEnd
+   * @param file_no STDIN_FILENO or STDOUT_FILENO
+   */
+  void connect_pipe_end(PipeEnd pipeEnd, int file_no) const;
 
-    /**
-     * Marks the pipe as write end and connects
-     * stdout with write end.
-     */
-    void as_write_end();
-    /**
-     * Marks the pipe as read end and connects
-     * stdin with read end.
-     */
-    void as_read_end();
+ public:
+  Pipe();
 
-    /**
-     * Closes all FDs. Must be called in parent process
-     * before the object is deleted in order to avoid
-     * deadlocks. Otherwise Linux things there are open
-     * readers/writers which becomes a problem when the
-     * internal buffer is full.
-     */
-    void close_all() const;
+  /**
+   * Marks the pipe as write end and connects
+   * stdout with write end.
+   */
+  void as_write_end();
+  /**
+   * Marks the pipe as read end and connects
+   * stdin with read end.
+   */
+  void as_read_end();
 
-    /**
-     * Creates a string representation.
-     */
-    [[nodiscard]] std::string toString() const;
+  /**
+   * Closes all FDs. Must be called in parent process
+   * before the object is deleted in order to avoid
+   * deadlocks. Otherwise Linux things there are open
+   * readers/writers which becomes a problem when the
+   * internal buffer is full.
+   */
+  void close_all() const;
+
+  /**
+   * Creates a string representation.
+   */
+  [[nodiscard]] std::string toString() const;
 };

@@ -13,8 +13,8 @@
 #include <optional>
 #include <vector>
 
-#include "input-kind.enum.hpp"
 #include "command-chain.class.hpp"
+#include "input-kind.enum.hpp"
 
 /**
  * Describes the parsed data for all possible input values.
@@ -26,45 +26,45 @@
  * are all parsed into an object of this class.
  */
 class ParsedInputData {
-private:
-    /**
-     * The type of the input.
-     */
-    InputKind type = InputKind::UNKNOWN;
-    /**
-     * If present, the data for the 'cd' action.
-     */
-    std::optional<std::string> dataCdDir = std::nullopt;
-    /**
-     * If present, the data for the 'execute command chain' action.
-     */
-    std::optional<CommandChain> dataCommandChain = std::nullopt;
-    /**
-     * If present, the data for the 'alias (get-, un-)' action.
-     */
-    std::optional<std::string> dataAliasName = std::nullopt;
-    /**
-    * If present, the data for the 'alias (set-)' action.
-    */
-    std::optional<std::string> dataAliasValue = std::nullopt;
+ private:
+  /**
+   * The type of the input.
+   */
+  InputKind type = InputKind::UNKNOWN;
+  /**
+   * If present, the data for the 'cd' action.
+   */
+  std::optional<std::string> dataCdDir = std::nullopt;
+  /**
+   * If present, the data for the 'execute command chain' action.
+   */
+  std::optional<CommandChain> dataCommandChain = std::nullopt;
+  /**
+   * If present, the data for the 'alias (get-, un-)' action.
+   */
+  std::optional<std::string> dataAliasName = std::nullopt;
+  /**
+   * If present, the data for the 'alias (set-)' action.
+   */
+  std::optional<std::string> dataAliasValue = std::nullopt;
 
-public:
-    [[nodiscard]] InputKind getType() const;
+ public:
+  [[nodiscard]] InputKind getType() const;
 
-    void setType(InputKind type);
+  void setType(InputKind type);
 
-    std::string &getDataCdDir();
-    CommandChain &getDataCommandChain();
-    std::string &getDataAliasName();
-    std::string &getDataAliasValue();
+  std::string& getDataCdDir();
+  CommandChain& getDataCommandChain();
+  std::string& getDataAliasName();
+  std::string& getDataAliasValue();
 
-    void setDataCdDir(const std::optional<std::string> dataCdDir);
+  void setDataCdDir(const std::optional<std::string> dataCdDir);
 
-    void setDataCommandChain(const std::optional<CommandChain> dataCommandChain);
+  void setDataCommandChain(const std::optional<CommandChain> dataCommandChain);
 
-    void setDataAliasName(const std::optional<std::string> dataAliasName);
+  void setDataAliasName(const std::optional<std::string> dataAliasName);
 
-    void setDataAliasValue(const std::optional<std::string> dataAliasValue);
+  void setDataAliasValue(const std::optional<std::string> dataAliasValue);
 
-    std::string toString();
+  std::string toString();
 };

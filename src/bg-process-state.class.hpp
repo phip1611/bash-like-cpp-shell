@@ -12,14 +12,15 @@
 #include <sys/wait.h>
 
 class BgProcessState {
-private:
-    bool done = false;
-    pid_t pid;
-public:
-    BgProcessState(pid_t pid);
-    void set_done();
+ private:
+  bool done = false;
+  pid_t pid;
 
-    bool isDone() const;
+ public:
+  BgProcessState(pid_t pid);
+  void set_done();
 
-    pid_t getPid() const;
+  bool isDone() const;
+
+  pid_t getPid() const;
 };

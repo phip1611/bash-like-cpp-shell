@@ -12,16 +12,16 @@
 #include <string>
 
 enum PipeEnd {
-    READ = 0,
-    WRITE = 1,
+  READ = 0,
+  WRITE = 1,
 };
 
 namespace pipe_end {
-    /**
-     * Transforms a enum value into it's string representation.
-     *
-     * @param cp
-     * @return string representation
-     */
-    std::string to_string(PipeEnd const pe);
-}
+/**
+ * Transforms a enum value into it's string representation.
+ *
+ * @param cp
+ * @return string representation
+ */
+std::string to_string(PipeEnd const pe);
+}  // namespace pipe_end
