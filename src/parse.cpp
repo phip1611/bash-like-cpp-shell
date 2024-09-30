@@ -92,7 +92,7 @@ bool verify_is_set_alias_input(const std::string* const input) {
   }
 
   size_t eq_sign_i = input->find('=');
-  if (eq_sign_i == -1u) {
+  if (eq_sign_i == std::string::npos) {
     fprintf(stderr, "Syntax is: alias <alias-name>=<alias-value>\n");
     return false;
   }

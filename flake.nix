@@ -26,6 +26,7 @@
             version = "0.1.0";
             src = pkgs.nix-gitignore.gitignoreSource [] ./.;
             nativeBuildInputs = with pkgs; [
+              bear
               gcc
               gnumake
             ];

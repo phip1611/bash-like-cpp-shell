@@ -57,5 +57,14 @@ fmt:
 fmt_check:
 	find src -iname \*.hpp -o -iname \*.h -o -iname \*.cpp -o -iname \*.c | xargs clang-format --style=Chromium --dry-run --Werror
 
+$(OBJ_DIR)/compile_commands.json: | $(OBJ_DIR)
+	bear --output $(OBJ_DIR)/compile_commands.json -- $(MAKE)
+
+# We need to run "make clean" first before this works.
+.PHONY: lint
+lint: | $(OBJ_DIR)/compile_commands.json
+	clang-tidy -p $(OBJ_DIR)/compile_commands.json $(SRC)
+
+
 # follow dependency files (to trigger recompile if file changed)
 -include $(DEP)
