@@ -27,7 +27,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v29
+      - uses: cachix/install-nix-action@v30
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: check format
         run: nix develop --command bash -c  "make fmt_check"
@@ -41,7 +41,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      - uses: cachix/install-nix-action@v29
+      - uses: cachix/install-nix-action@v30
       - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: nix build
         run: nix build .
