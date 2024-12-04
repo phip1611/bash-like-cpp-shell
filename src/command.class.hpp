@@ -26,7 +26,7 @@ class Command {
    */
   std::string executable = "";
   /**
-   * Arguments for the commamd.
+   * Arguments for the command.
    */
   std::vector<std::string> args = {};
   /**
