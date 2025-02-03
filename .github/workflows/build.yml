@@ -42,7 +42,6 @@ jobs:
     steps:
       - uses: actions/checkout@v4
       - uses: cachix/install-nix-action@v30
-      - uses: DeterminateSystems/magic-nix-cache-action@main
       - name: nix build
         run: nix build .
       - name: nix test
