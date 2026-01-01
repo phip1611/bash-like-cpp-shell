@@ -5,7 +5,7 @@
  * You can find the LICENSE file in the repository.
  */
 
-// Background Processe State class.
+// Background Process State class.
 
 #pragma once
 
