@@ -5,7 +5,7 @@
 
 OBJ_DIR = build
 
-CPPFLAGS  = -ggdb -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++17
+CPPFLAGS  = -ggdb -Wall -Werror -Wshadow -Weffc++ -pedantic -std=c++23
 INCFLAGS  = -I../src
 
 # list all test binaries here

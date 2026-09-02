@@ -50,7 +50,7 @@ void Command::setOutputRedFile(
 char** Command::build_argv() const {
   // +1 -> null terminated
   char** argv =
-      static_cast<char**>(calloc(sizeof(char*), this->getArgs().size() + 1));
+      static_cast<char**>(calloc(this->getArgs().size() + 1, sizeof(char*)));
   for (unsigned i = 0; i < this->getArgs().size(); i++) {
     argv[i] = strdup(this->getArgs()[i].data());
   }
